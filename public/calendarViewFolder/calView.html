@@ -27,7 +27,7 @@
 			}
 
 			function checkAuth() {
-				gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: true}, handleAuthResult);
+				gapi.auth.authorize({client_id: clientId, scope: scopes[0], immediate: true}, handleAuthResult);
 			}
 
 			// show/hide the 'authorize' button, depending on application state
@@ -51,7 +51,7 @@
 			
 			// function triggered when user authorizes app
 			function handleAuthClick(event) {
-				gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: false}, handleAuthResult);
+				gapi.auth.authorize({client_id: clientId, scope: scopes[0], immediate: false}, handleAuthResult);
 				return false;
 			}
 			
@@ -70,7 +70,7 @@
 			function makeApiCall() {
 				gapi.client.load('calendar', 'v3', function() {					// load the calendar api (version 3)
 					var request = gapi.client.calendar.events.insert({
-						'calendarId':		'gk0pudanag1bhu35vkv5dunja4@group.calendar.google.com',	// calendar ID
+						'calendarId':		'primary',	// calendar ID
 						"resource":			resource							// pass event details with api call
 					});
 					
@@ -81,15 +81,9 @@
 						} else {
 							document.getElementById('event-response').innerHTML = "There was a problem. Reload page and try again.";
                         }
-                        /*
-						for (var i = 0; i < resp.items.length; i++) {		// loop through events and write them out to a list
-							var li = document.createElement('li');
-							var eventInfo = resp.items[i].summary + ' ' +resp.items[i].start.dateTime;
-							li.appendChild(document.createTextNode(eventInfo));
-							document.getElementById('events').appendChild(li);
-                        } 
-                        */
-						console.log(resp);
+                        
+                        
+						console.log("This is response" + resp);
 					});
 				});
 			}
