@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>View Assignments</title>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    </head>
+    <body>
+        <!--Add buttons to initiate auth sequence and sign out-->
+        <button id="authorize_button" style="display: none;">Authorize</button>
+        <button id="signout_button" style="display: none;">Sign Out</button>
+        
+        <div id="content">
+        </div>
+        
+        <script defer src="js/calendar.js"></script>
+        <script async defer src="https://apis.google.com/js/api.js"
+            onload="this.onload=function(){};handleClientLoad()"
+            onreadystatechange="if (this.readyState === 'complete') this.onload()">
+        </script>
+    </body>
+</html>
