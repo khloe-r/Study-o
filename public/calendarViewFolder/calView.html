@@ -70,7 +70,7 @@
 			function makeApiCall() {
 				gapi.client.load('calendar', 'v3', function() {					// load the calendar api (version 3)
 					var request = gapi.client.calendar.events.insert({
-						'calendarId':		'gk0pudanag1bhu35vkv5dunja4@group.calendar.google.com',	// calendar ID
+						'calendarId':		'primary',	// calendar ID
 						"resource":			resource							// pass event details with api call
 					});
 					
