@@ -66,15 +66,17 @@ function handleAuthClick(event) {
 // function load the calendar api and make the api call
 function makeApiCall() {
     if (document.querySelector("#dueDateInput").value.length !== 0 && document.querySelector("#titleInput").value.length !== 0 && document.querySelector("#dueTimeInput").value.length !== 0) {
-        gapi.client.load('calendar', 'v3', function () {					// load the calendar api (version 3)
+        let testing = new Date(`${document.querySelector("#dueDateInput").value}T${ document.querySelector("#dueTimeInput").value}:00`);
+        gapi.client.load('calendar', 'v3', function () {
+            var dateWTime = testing.toISOString();					// load the calendar api (version 3)
             var request = gapi.client.calendar.events.insert({
                 'calendarId': 'primary',	// calendar ID
                 "resource": {
                     "end": {
-                        "date": "2021-08-04"
+                        "dateTime": dateWTime
                     },
                     "start": {
-                        "date": "2021-08-03"
+                        "dateTime": dateWTime
                     },
                     "description": document.querySelector("#descriptionInput").value,
                     "summary":document.querySelector("#titleInput").value
