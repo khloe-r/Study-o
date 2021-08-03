@@ -76,7 +76,7 @@ function makeApiCall() {
                     "start": {
                         "date": "2021-08-03"
                     },
-                    "description": "hello",
+                    "description": document.querySelector("#descriptionInput").value,
                     "summary":document.querySelector("#titleInput").value
                 }
             });
