@@ -81,7 +81,10 @@ const displayEvent = (eventID, title, date, description) => {
     `<div class="column is-one-quarter">
         <div class="card">
             <header class="card-header">
-                <p class="card-header-title">${title}   ${date}</p>
+                <div>
+                    <p class="card-header-title">${title}</p>
+                    <p class="card-header-title">${date}</p>
+                </div>
             </header>
             <div class="card-content">
                 <div class="content">${description}</div>
@@ -94,17 +97,17 @@ const displayEvent = (eventID, title, date, description) => {
 }
 
 const editEvent = (eventID) => {
-    const editNoteModal = document.querySelector('#editNoteModal');
-    editNoteModal.classList.value = `modal ${eventID}`;
-    console.log(editNoteModal.classList);
-    editNoteModal.classList.toggle('is-active');
+    const editEventModal = document.querySelector('#editEventModal');
+    editEventModal.classList.value = `modal ${eventID}`;
+    console.log(editEventModal.classList);
+    editEventModal.classList.toggle('is-active');
 }
 
 const saveEditedNote = () => {    
     const noteTitle = document.querySelector('#editTitleInput').value;
     const noteText = document.querySelector('#editTextInput').value;
-    const editNoteModal = document.querySelector('#editNoteModal');
-    const eventID = editNoteModal.classList[editNoteModal.classList.length - 2];
+    const editEventModal = document.querySelector('#editEventModal');
+    const eventID = editEventModal.classList[editEventModal.classList.length - 2];
 
     const event = gapi.client.calendar.events.get({"calendarId": 'primary', "eventId": eventID});
     event.summary = noteTitle;
@@ -124,8 +127,8 @@ const saveEditedNote = () => {
 }
 
 const closeEditModal = () => {
-    const editNoteModal = document.querySelector('#editNoteModal');
-    editNoteModal.classList.toggle('is-active');
+    const editEventModal = document.querySelector('#editEventModal');
+    editEventModal.classList.toggle('is-active');
 };
 
 /**
@@ -151,7 +154,9 @@ function listUpcomingEvents() {
                 if (!when) {
                     when = event.start.date;
                 }
-                displayEvent(event.id, event.summary, when, event.description);
+
+                let date = new Date(when);
+                displayEvent(event.id, event.summary, date.toUTCString(), event.description);
             }
         }
     });
