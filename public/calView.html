@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Study-o</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <!-- update the version number as needed -->
+    <script defer src="/__/firebase/8.3.1/firebase-app.js"></script>
+    <!-- include only the Firebase features as you need -->
+    <script defer src="/__/firebase/8.3.1/firebase-auth.js"></script>
+    <script defer src="/__/firebase/8.3.1/firebase-database.js"></script>
+    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+    <script src="js/calendarView.js"></script>
+</head>
+
+<body>
+    <div class="row">
+        <div class="col-md-2 col-sm-2 col-xs-12">
+        </div><!-- .col -->
+
+        <div class="col-md-10 col-sm-10 col-xs-12">
+
+            <script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>
+            <div class="panel-heading">
+                <h3 class="panel-title" id="result-title">Put in your Info!</h3>
+            </div>
+            <form class="box">
+                <div class="field">
+                    <label class="label">Title</label>
+                    <div class="control">
+                        <input class="input" placeholder="e.g. Math Assignment 115" id="titleInput">
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Due Date</label>
+                    <div class="control">
+                        <input class="input" type="date" id="dueDateInput">
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Time it is due</label>
+                    <div class="control">
+                        <input class="input" type="time" id="dueTimeInput">
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Estimated Length to Complete</label>
+                    <div class="select" id="lengthInput">
+                        <select>
+                            <option>Less than 30 minutes</option>
+                            <option>30 minutes to an hour</option>
+                            <option>More than an hour</option>
+                        </select>
+                    </div>
+
+                </div>
+            </form>
+            <button class="button is-light" id="submitButton" onclick = "makeApiCall()">Add Event!</button>
+            <iframe src="https://calendar.google.com/calendar/embed?src=bhatiasiapictures%40gmail.com&ctz=America%2FToronto" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
+
+
+        </div>
+
+
+    </div>
+</body>
+    
+
+</html>
