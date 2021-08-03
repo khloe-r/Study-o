@@ -76,7 +76,7 @@ function handleSignoutClick(event) {
  * as its text node. Used to display the results of the API call.
  *
  */
-function displayEvent(eventID, title, date, description) {
+const displayEvent = (eventID, title, date, description) => {
     let card = 
     `<div class="column is-one-quarter">
         <div class="card">
@@ -94,12 +94,23 @@ function displayEvent(eventID, title, date, description) {
 }
 
 const editEvent = (eventID) => {
-    let event = gapi.client.calendar.events.get({"calendarId": 'primary', "eventId": eventID});
+    const editNoteModal = document.querySelector('#editNoteModal');
+    editNoteModal.classList.value = `modal ${eventID}`;
+    console.log(editNoteModal.classList);
+    editNoteModal.classList.toggle('is-active');
+}
 
-    // Example showing a change in the location
-    event.description = "New Description adasdadsadsds";
+const saveEditedNote = () => {    
+    const noteTitle = document.querySelector('#editTitleInput').value;
+    const noteText = document.querySelector('#editTextInput').value;
+    const editNoteModal = document.querySelector('#editNoteModal');
+    const eventID = editNoteModal.classList[editNoteModal.classList.length - 2];
 
-    var request = gapi.client.calendar.events.patch({
+    const event = gapi.client.calendar.events.get({"calendarId": 'primary', "eventId": eventID});
+    event.summary = noteTitle;
+    event.description = noteText;
+
+    let request = gapi.client.calendar.events.patch({
         'calendarId': 'primary',
         'eventId': eventID,
         'resource': event
@@ -107,8 +118,15 @@ const editEvent = (eventID) => {
 
     request.execute(function (event) {
         console.log(event);
-    });    
+    });
+
+    closeEditModal();
 }
+
+const closeEditModal = () => {
+    const editNoteModal = document.querySelector('#editNoteModal');
+    editNoteModal.classList.toggle('is-active');
+};
 
 /**
  * Print the summary and start datetime/date of the next ten events in

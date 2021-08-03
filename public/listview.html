@@ -12,6 +12,23 @@
         
         <div id="content">
         </div>
+
+        <div id="editNoteModal" class="modal eventID">
+            <div class="modal-background"></div>
+            <div class="modal-card">
+                <section class="modal-card-body">
+            <input id="editNoteId" type="hidden">
+                <p class="is-subtitle">Title</p>
+                <input class="input is-normal" id="editTitleInput" type="text">
+                <p class="is-subtitle">Text</p>
+                <input class="input is-normal" id="editTextInput" type="text">
+                </section>
+                <footer class="modal-card-foot">
+                <button class="button is-success" onclick="saveEditedNote()">Save changes</button>
+                <button class="button" onclick="closeEditModal()">Cancel</button>
+                </footer>
+            </div>
+        </div>
         
         <script defer src="js/calendar.js"></script>
         <script async defer src="https://apis.google.com/js/api.js"
