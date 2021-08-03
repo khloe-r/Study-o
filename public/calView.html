@@ -1,3 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Study-o</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+        <!-- update the version number as needed -->
+        <script defer src="/__/firebase/8.3.1/firebase-app.js"></script>
+        <!-- include only the Firebase features as you need -->
+        <script defer src="/__/firebase/8.3.1/firebase-auth.js"></script>
+        <script defer src="/__/firebase/8.3.1/firebase-database.js"></script>
+        <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+        <script src="js/calendarView.js"></script>
+    </head>
 <div class="row">
     <div class="col-md-2 col-sm-2 col-xs-12">
         <button id="authorize-button" style="visibility: hidden" class="btn btn-primary">Authorize</button>
@@ -44,9 +58,10 @@
                     resultTitle.innerHTML = 'Application Authorized'		// display 'authorized' text
                     makeApiCall();											// call the api if authorization passed
                 } else {													// otherwise, show button
-                    authorizeButton.style.visibility = 'visible';
-                    resultPanel.className += ' panel-danger';				// make panel red
-                    authorizeButton.onclick = handleAuthClick;				// setup function to handle button click
+                    location.replace("https://study-o.web.app/gCal.html");
+                    // authorizeButton.style.visibility = 'visible';
+                    // resultPanel.className += ' panel-danger';				// make panel red
+                    // authorizeButton.onclick = handleAuthClick;				// setup function to handle button click
                 }
             }
 
@@ -110,8 +125,9 @@
             <div class="panel-body">
                 <p>Insert Event into Public Calendar&hellip;</p>
                 <div id="event-response"></div>
-            </div><!-- .panel-body -->
-        </div><!-- .panel -->
+            </div>
+        </div>
 
-    </div><!-- .col -->
-</div><!-- .row -->
+    </div>
+</div>
+</html>
