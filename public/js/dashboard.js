@@ -21,6 +21,7 @@ function displayPage(name) {
 }
 
 
+
     //   // Client ID and API key from the Developer Console
     //   var CLIENT_ID = '243003109957-8bpj74e6eib10r888ccleeh1t0lhqp8g.apps.googleusercontent.com';
     //   var API_KEY = 'AIzaSyDEL7uevoZ_rQ3JLHWDTqHGKrWvTRG-tKY';

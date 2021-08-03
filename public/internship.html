@@ -13,6 +13,8 @@
     <script defer src="/__/firebase/8.3.1/firebase-database.js"></script>
     <script defer src="/__/firebase/8.8.1/firebase-storage.js"></script>
     <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+    <script src="js/logout.js"></script>
+    <script src="js/internshipCal.js"></script>
 </head>
 
 <body> 
@@ -30,7 +32,7 @@
         </div>
 
         <div id="navbarBasicExample" class="navbar-menu">
-            <div class="navbar-start">
+            <div class="navbar-end">
                 <a class="navbar-item" href="homework.html"> 
                     Homework Tracker
                 </a>
@@ -51,7 +53,7 @@
             <div class="navbar-end">
             <div class="navbar-item">
                 <div class="buttons">
-                <a class="button is-primary">
+                <a class="button is-primary" onclick="logout()">
                     <strong>Log Out</strong>
                 </a>
                 </div>
@@ -60,6 +62,7 @@
         </div>
     </nav> 
     <!-- Title -->
+    <script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>
     <section class="hero is-small has-text-centered">
         <div class="hero-body">
             <p class="title">
@@ -68,13 +71,52 @@
         </div>
     </section>
     <!-- Add Application Form -->
-    <section class="hero is-small has-text-centered">
+    <section class="hero is-small">
         <div class="hero-body">
-            <p class="title">
+            <p class="title has-text-centered">
             Add an Application
-            </p>
+            </p> 
+            <form class="box">
+                <div class="field">
+                    <label class="label">Internship Name</label>
+                    <div class="control">
+                        <input class="input" placeholder="e.g. STEP Intern @ Google" id="titleInput">
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Internship Description (Optional)</label>
+                    <div class="control">
+                        <input class="input" placeholder="e.g. Student Training in Engineering Program" id="descriptionInput">
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Application Date Deadline</label>
+                    <div class="control">
+                        <input class="input" type="date" id="deadlineInput">
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Application Time Deadline</label>
+                    <div class="control">
+                        <input class="input" type="time" id="dueTimeInput">
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Status</label>
+                    <div class="select">
+                        <select id="statusInput">
+                            <option>Have to Apply</option>
+                            <option>Applied & Waiting</option>
+                            <option>Interview Stage</option>
+                        </select>
+                    </div>
+
+                </div>
+            </form>
+            <button class="button is-light" id="submitButton" onclick = "addApplication()">Add Application</button>
         </div>
     </section>
+
     <!-- File Upload -->
     <section class="hero is-small has-text-centered">
         <div class="hero-body">
