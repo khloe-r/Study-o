@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Study-o</title>
+    <link rel="stylesheet" href="style.css" type="text/css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <!-- update the version number as needed -->
+    <script defer src="/__/firebase/8.3.1/firebase-app.js"></script>
+    <!-- include only the Firebase features as you need -->
+    <script defer src="/__/firebase/8.3.1/firebase-auth.js"></script>
+    <script defer src="/__/firebase/8.3.1/firebase-database.js"></script>
+    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+</head>
+
+<body> 
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="dashboard.html">
+            <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28">
+            </a>
+
+            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            </a>
+        </div>
+
+        <div id="navbarBasicExample" class="navbar-menu">
+            <div class="navbar-start">
+                <a class="navbar-item" href="homework.html"> 
+                    Homework Tracker
+                </a>
+
+                <a class="navbar-item" href="internship.html">
+                    Internship Tracker
+                </a>
+                    <a class="navbar-item" href="pomodoro.html">
+                    Pomodoro Timer
+                </a>
+
+                <a class="navbar-item" href="notebooks.html">
+                    Notebooks
+                </a>
+            
+            </div>
+
+            <div class="navbar-end">
+            <div class="navbar-item">
+                <div class="buttons">
+                <a class="button is-primary">
+                    <strong>Log Out</strong>
+                </a>
+                </div>
+            </div>
+            </div>
+        </div>
+    </nav>     
+    <section class="hero is-medium has-text-centered">
+        <div class="hero-body">
+            <p class="title">
+            Pomodoro Timer
+            </p>
+        </div>
+    </section>
+</body>
+
+</html>
