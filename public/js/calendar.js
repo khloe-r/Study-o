@@ -7,7 +7,7 @@ var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/
 
 // Authorization scopes required by the API; multiple scopes can be
 // included, separated by spaces.
-var SCOPES = "https://www.googleapis.com/auth/calendar.readonly";
+var SCOPES = "https://www.googleapis.com/auth/calendar";
 
 var authorizeButton = document.getElementById('authorize_button');
 var signoutButton = document.getElementById('signout_button');
@@ -76,7 +76,7 @@ function handleSignoutClick(event) {
  * as its text node. Used to display the results of the API call.
  *
  */
-function addEvent(title, date, description) {
+function displayEvent(eventID, title, date, description) {
     let card = 
     `<div class="column is-one-quarter">
         <div class="card">
@@ -86,10 +86,28 @@ function addEvent(title, date, description) {
             <div class="card-content">
                 <div class="content">${description}</div>
             </div>
-        </div>
+            <button id="${eventID}" class="button is-info" onclick="editEvent(this.id)">Edit Event</button>
+        </div>        
     </div>`;
    
     document.querySelector('#content').innerHTML += card;
+}
+
+const editEvent = (eventID) => {
+    let event = gapi.client.calendar.events.get({"calendarId": 'primary', "eventId": eventID});
+
+    // Example showing a change in the location
+    event.description = "New Description adasdadsadsds";
+
+    var request = gapi.client.calendar.events.patch({
+        'calendarId': 'primary',
+        'eventId': eventID,
+        'resource': event
+    });
+
+    request.execute(function (event) {
+        console.log(event);
+    });    
 }
 
 /**
@@ -115,7 +133,7 @@ function listUpcomingEvents() {
                 if (!when) {
                     when = event.start.date;
                 }
-                addEvent(event.summary, when, event.description);
+                displayEvent(event.id, event.summary, when, event.description);
             }
         }
     });
