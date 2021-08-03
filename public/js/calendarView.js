@@ -66,7 +66,8 @@ function handleAuthClick(event) {
 // function load the calendar api and make the api call
 function makeApiCall() {
     if (document.querySelector("#dueDateInput").value.length !== 0 && document.querySelector("#titleInput").value.length !== 0 && document.querySelector("#dueTimeInput").value.length !== 0) {
-        gapi.client.load('calendar', 'v3', function () {					// load the calendar api (version 3)
+        gapi.client.load('calendar', 'v3', function () {
+            var dateWTime = ``					// load the calendar api (version 3)
             var request = gapi.client.calendar.events.insert({
                 'calendarId': 'primary',	// calendar ID
                 "resource": {
