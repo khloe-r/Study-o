@@ -1,133 +1,70 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>Study-o</title>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
-        <!-- update the version number as needed -->
-        <script defer src="/__/firebase/8.3.1/firebase-app.js"></script>
-        <!-- include only the Firebase features as you need -->
-        <script defer src="/__/firebase/8.3.1/firebase-auth.js"></script>
-        <script defer src="/__/firebase/8.3.1/firebase-database.js"></script>
-        <script defer src="/__/firebase/init.js?useEmulator=true"></script>
-        <script src="js/calendarView.js"></script>
-    </head>
-<div class="row">
-    <div class="col-md-2 col-sm-2 col-xs-12">
-        <button id="authorize-button" style="visibility: hidden" class="btn btn-primary">Authorize</button>
-    </div><!-- .col -->
 
-    <div class="col-md-10 col-sm-10 col-xs-12">
-        <script type="text/javascript">
-            // date variables
-            var now = new Date();
-            today = now.toISOString();
+<head>
+    <meta charset="UTF-8">
+    <title>Study-o</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <!-- update the version number as needed -->
+    <script defer src="/__/firebase/8.3.1/firebase-app.js"></script>
+    <!-- include only the Firebase features as you need -->
+    <script defer src="/__/firebase/8.3.1/firebase-auth.js"></script>
+    <script defer src="/__/firebase/8.3.1/firebase-database.js"></script>
+    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+    <script src="js/calendarView.js"></script>
+</head>
 
-            var twoHoursLater = new Date(now.getTime() + (2 * 1000 * 60 * 60));
-            twoHoursLater = twoHoursLater.toISOString();
+<body>
+    <div class="row">
+        <div class="col-md-2 col-sm-2 col-xs-12">
+        </div><!-- .col -->
 
-            // google api console clientID and apiKey (https://code.google.com/apis/console/#project:568391772772)
-            var clientId = '243003109957-8bpj74e6eib10r888ccleeh1t0lhqp8g.apps.googleusercontent.com';
-            var apiKey = 'AIzaSyDEL7uevoZ_rQ3JLHWDTqHGKrWvTRG-tKY';
+        <div class="col-md-10 col-sm-10 col-xs-12">
 
-            // enter the scope of current project (this API must be turned on in the google console)
-            var scopes = 'https://www.googleapis.com/auth/calendar';
-
-
-            // Oauth2 functions
-            function handleClientLoad() {
-                gapi.client.setApiKey(apiKey);
-                window.setTimeout(checkAuth, 1);
-            }
-
-            function checkAuth() {
-                gapi.auth.authorize({ client_id: clientId, scope: scopes, immediate: true }, handleAuthResult);
-            }
-
-            // show/hide the 'authorize' button, depending on application state
-            function handleAuthResult(authResult) {
-                var authorizeButton = document.getElementById('authorize-button');
-                var resultPanel = document.getElementById('result-panel');
-                var resultTitle = document.getElementById('result-title');
-                console.log(authResult);
-
-                if (authResult && !authResult.error) {
-                    authorizeButton.style.visibility = 'hidden';			// if authorized, hide button
-                    resultPanel.className = resultPanel.className.replace(/(?:^|\s)panel-danger(?!\S)/g, '')	// remove red class
-                    resultPanel.className += ' panel-success';				// add green class
-                    resultTitle.innerHTML = 'Application Authorized'		// display 'authorized' text
-                    makeApiCall();											// call the api if authorization passed
-                } else {													// otherwise, show button
-                    location.replace("https://study-o.web.app/gCal.html");
-                    // authorizeButton.style.visibility = 'visible';
-                    // resultPanel.className += ' panel-danger';				// make panel red
-                    // authorizeButton.onclick = handleAuthClick;				// setup function to handle button click
-                }
-            }
-
-            // function triggered when user authorizes app
-            function handleAuthClick(event) {
-                gapi.auth.authorize({ client_id: clientId, scope: scopes, immediate: false }, handleAuthResult);
-                return false;
-            }
-
-            // setup event details
-            var resource = {
-                "summary": "Sample Event " + Math.floor((Math.random() * 10) + 1),
-                "start": {
-                    "dateTime": today
-                },
-                "end": {
-                    "dateTime": twoHoursLater
-                },
-                "description": "test"
-            };
-
-            // function load the calendar api and make the api call
-            function makeApiCall() {
-                gapi.client.load('calendar', 'v3', function () {					// load the calendar api (version 3)
-                    var request = gapi.client.calendar.events.insert({
-                        'calendarId': 'primary',	// calendar ID
-                        "resource": resource							// pass event details with api call
-                    });
-
-                    gapi.client.calendar.events.list({
-                        "calendarId": "primary"
-                    })
-                        .then(function (response) {
-                            // Handle the results here (response.result has the parsed body).
-                            console.log("Response", response);
-                        },
-                            function (err) { console.error("Execute error", err); });
-
-                    // handle the response from our api call
-                    request.execute(function (resp, errr) {
-                        if (resp.status == 'confirmed') {
-                            document.getElementById('event-response').innerHTML = "Event created successfully. View it <a href='" + resp.htmlLink + "'>online here</a>.";
-                        } else {
-                            console.log(errr);
-                            document.getElementById('event-response').innerHTML = "There was a problem. Reload page and try again.";
-                           // calendarList.get('primary')
-                        }
-
-
-                        console.log(resp);
-                    });
-                });
-            }
-        </script>
-        <script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>
-
-        <div class="panel panel-danger" id="result-panel">
+            <script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>
             <div class="panel-heading">
-                <h3 class="panel-title" id="result-title">Application Not Authorized</h3>
-            </div><!-- .panel-heading -->
-            <div class="panel-body">
-                <p>Insert Event into Public Calendar&hellip;</p>
-                <div id="event-response"></div>
+                <h3 class="panel-title" id="result-title">Put in your Info!</h3>
             </div>
+            <form class="box">
+                <div class="field">
+                    <label class="label">Title</label>
+                    <div class="control">
+                        <input class="input" placeholder="e.g. Math Assignment 115" id="titleInput">
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Due Date</label>
+                    <div class="control">
+                        <input class="input" type="date" id="dueDateInput">
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Time it is due</label>
+                    <div class="control">
+                        <input class="input" type="time" id="dueTimeInput">
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Estimated Length to Complete</label>
+                    <div class="select" id="lengthInput">
+                        <select>
+                            <option>Less than 30 minutes</option>
+                            <option>30 minutes to an hour</option>
+                            <option>More than an hour</option>
+                        </select>
+                    </div>
+
+                </div>
+            </form>
+            <button class="button is-light" id="submitButton" onclick = "makeApiCall()">Add Event!</button>
+            <iframe src="https://calendar.google.com/calendar/embed?src=bhatiasiapictures%40gmail.com&ctz=America%2FToronto" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
+
+
         </div>
 
+
     </div>
-</div>
+</body>
+    
+
 </html>
