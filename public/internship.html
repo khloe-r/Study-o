@@ -80,10 +80,14 @@
         <div class="hero-body">
             <div class="columns">
                 <div class="column">
-                    <h5>View Files</h5>
+                    <h5 class="title">View Files</h5>
+                    <p class="subtitle">Click on a file below then click download!</p>
+                    <p id="fileSelected">Selected File: None</p>
+                    <a id="myDownload" download>Download Here</a>
+                    <div id="fileList"></div>
                 </div>
                 <div class="column">
-                    <h5>Upload Files</h5>
+                    <h5 class="title">Upload Files</h5>
                     <div class="file is-centered mt-3 has-name">
                         <label class="file-label">
                             <input class="file-input" type="file" name="resume" id="fileUpload">
@@ -102,9 +106,9 @@
                     </div>
 
                     <div class="field mt-3">
-                        <label class="label">File Description</label>
+                        <label class="label">File Category</label>
                         <div class="control">
-                            <input class="input" type="text" placeholder="Text input" id="fileUploadInput">
+                            <input class="input" type="text" placeholder="Ex. Resume, Cover Letter" id="fileUploadInput">
                         </div>
                     </div>
                     <button class="button" onclick="submitFile()">Upload my File</button>
