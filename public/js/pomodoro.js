@@ -8,6 +8,7 @@ const progressBar = document.querySelector('#progressBar')
 const trigger = document.querySelector("#trigger");
 let i = 0
 let countdown = 25;
+let counter = 0;
 
 // function sound(src) {
 //   this.sound = document.createElement("audio");
@@ -32,6 +33,10 @@ let countdown = 25;
 // })
 
 studySession.onchange = () => {
+    resetBar()
+}
+
+const resetBar = () => {
     if (studySession.value === 'Study (25 minutes)') {
         countdown = 25
         progressBar.max = 25 * 60
@@ -47,7 +52,7 @@ studySession.onchange = () => {
 
 const start = () => {
   if (trigger.innerHTML === "Start") {
-    i = setInterval(decreaseTime, 1000)
+    i = setInterval(decreaseTime, 5)
     trigger.innerHTML = "Pause"
   }
   else {
@@ -75,9 +80,26 @@ const decreaseTime = () => {
       
     }
     else {
-      second.innerHTML = "00"
-      clearInterval(i)
-    //   alertSound.play()
+        second.innerHTML = "00"
+        clearInterval(i)
+        //   alertSound.play()
+        if (countdown === 25) {
+            counter += 1
+            if (counter === 3) {
+                countdown = 15
+                studySession.value = 'Long Break (15 minutes)'
+            } else {
+                countdown = 5
+                studySession.value = 'Short Break (5 minutes)'
+            }
+            resetBar()
+            reset()
+        } else {
+            countdown = 25
+            studySession.value = 'Study (25 minutes)'
+            resetBar()
+            reset()
+        }
     }
   }
 }
