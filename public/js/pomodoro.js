@@ -4,33 +4,29 @@ const minute = document.querySelector('#minute')
 const second = document.querySelector("#second");
 const studySession = document.querySelector("#studySession");
 const progressBar = document.querySelector('#progressBar')
+const alertSound = document.createElement("audio");
 
 const trigger = document.querySelector("#trigger");
 let i = 0
 let countdown = 25;
-let counter = 0;
+let counter = 0; 
 
-// function sound(src) {
-//   this.sound = document.createElement("audio");
-//   this.sound.src = src;
-//   this.sound.setAttribute("preload", "auto");
-//   this.sound.setAttribute("controls", "none");
-//   this.sound.style.display = "none";
-//   document.body.appendChild(this.sound);
-//   this.play = function(){
-//     this.sound.play();
-//   }
-//   this.stop = function(){
-//     this.sound.pause();
-//   }
-// }
+window.onload = () => {
+    firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+            const musicRef = firebase.storage().ref(`mixkit-alarm-tone-996.wav`)
+            musicRef.getDownloadURL()
+                .then((url) => {
+                    alertSound.src = url
+                    alertSound.style.display = "none";
+                    document.body.appendChild(alertSound);
+                    alertSound.setAttribute("preload", "auto");
+                    alertSound.setAttribute("controls", "none");
+                })
 
-// const alertSound;
-// const musicRef = firebase.storage().ref(`mixkit-alarm-tone-996.wav`)
-// musicRef.getDownloadURL()
-// .then((url) => {
-//     alertSound = sound(url)
-// })
+        }
+    })
+}
 
 studySession.onchange = () => {
     resetBar()
@@ -52,7 +48,7 @@ const resetBar = () => {
 
 const start = () => {
   if (trigger.innerHTML === "Start") {
-    i = setInterval(decreaseTime, 5)
+    i = setInterval(decreaseTime, 1000)
     trigger.innerHTML = "Pause"
   }
   else {
@@ -82,7 +78,7 @@ const decreaseTime = () => {
     else {
         second.innerHTML = "00"
         clearInterval(i)
-        //   alertSound.play()
+          alertSound.play()
         if (countdown === 25) {
             counter += 1
             if (counter === 3) {
