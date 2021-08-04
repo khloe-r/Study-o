@@ -81,10 +81,8 @@ function handleAuthClick(event) {
 
 // function load the calendar api and make the api call
 function makeApiCall() {
-    console.log("Testing!");
+    
     if (document.querySelector("#dueDateInput").value.length !== 0 && document.querySelector("#titleInput").value.length !== 0 && document.querySelector("#dueTimeInput").value.length !== 0) {
-            console.log("Success!");
-
         let testing = new Date(`${document.querySelector("#dueDateInput").value}T${document.querySelector("#dueTimeInput").value}:00`);
         gapi.client.load('calendar', 'v3', function () {
             var dateWTime = testing.toISOString();					// load the calendar api (version 3)
@@ -102,6 +100,8 @@ function makeApiCall() {
                     "location": "Study-O Homework Tracker"
                 }
             });
+            getCalendarEvents();
+
 
             gapi.client.calendar.events.list({
                 "calendarId": "primary"
@@ -185,12 +185,15 @@ function moveRight(year, month){
         monthRn = 0;
         month = monthRn;
         genCal(year,month);
+        console.log(yearRn,monthRn);
     }
     else{
         monthRn +=1;
         month = monthRn;
         year = yearRn;
         genCal(year, month);
+        console.log(yearRn,monthRn);
+
     }
 }
 function moveLeft(year, month){
@@ -201,12 +204,16 @@ function moveLeft(year, month){
         monthRn = 11;
         month = monthRn;
         genCal(year,month);
+        console.log(yearRn,monthRn);
+
     }
     else{
         monthRn -=1;
         month = monthRn;
         year = yearRn;
         genCal(year, month);
+        console.log(yearRn,monthRn);
+
     }
 }
 
@@ -215,3 +222,28 @@ function moveLeft(year, month){
 //   makeApiCall();
 // });
 
+function getCalendarEvents(year, month){
+    return gapi.client.calendar.events.list({
+      "calendarId": "primary",
+      "q": "Study-O Homework Tracker",
+    })
+    .then(function(response){
+       // console.log("Response", response);
+        var events = response.result.items;
+          if (events.length > 0) {
+            for (i = 0; i < events.length; i++) {
+              var event = events[i];
+              let day = event.start.dateTime;
+              let yr = day.slice(0,4);
+              let mon = day.slice(5,7)-1;
+              if(yr===yearRn && mon === monthRn){
+                  
+              }
+              
+            }
+        }
+    },
+    function (err) { console.error("Execute error", err); });
+
+
+}
