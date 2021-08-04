@@ -1,70 +1,158 @@
 <!DOCTYPE html>
 <html>
-
-<head>
-    <meta charset="UTF-8">
-    <title>Study-o</title>
-    <link rel="stylesheet" href="style.css" type="text/css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
-    <!-- update the version number as needed -->
-    <script defer src="/__/firebase/8.3.1/firebase-app.js"></script>
-    <!-- include only the Firebase features as you need -->
-    <script defer src="/__/firebase/8.3.1/firebase-auth.js"></script>
-    <script defer src="/__/firebase/8.3.1/firebase-database.js"></script>
-    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
-</head>
-
-<body> 
-    <nav class="navbar" role="navigation" aria-label="main navigation">
-        <div class="navbar-brand">
-            <a class="navbar-item" href="dashboard.html">
-            <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28">
-            </a>
-
-            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-            </a>
-        </div>
-
-        <div id="navbarBasicExample" class="navbar-menu">
-            <div class="navbar-start">
-                <a class="navbar-item" href="homework.html"> 
+    <head>
+        <meta charset="UTF-8">
+        <title>Study-o</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+        <!-- update the version number as needed -->
+        <script defer src="/__/firebase/8.3.1/firebase-app.js"></script>
+        <!-- include only the Firebase features as you need -->
+        <script defer src="/__/firebase/8.3.1/firebase-auth.js"></script>
+        <script defer src="/__/firebase/8.3.1/firebase-database.js"></script>
+        <script defer src="/__/firebase/init.js?useEmulator=true"></script>    
+    </head>
+    <body>
+        <nav class="navbar" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand">
+                <a class="navbar-item" href="dashboard.html">
+                <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28">
+                </a>
+                <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                </a>
+            </div>
+            <div id="navbarBasicExample" class="navbar-menu">
+                <div class="navbar-start">
+                    <a class="navbar-item" href="homework.html"> 
                     Homework Tracker
-                </a>
-
-                <a class="navbar-item" href="internship.html">
+                    </a>
+                    <a class="navbar-item" href="internship.html">
                     Internship Tracker
-                </a>
+                    </a>
                     <a class="navbar-item" href="pomodoro.html">
                     Pomodoro Timer
-                </a>
-
-                <a class="navbar-item" href="notebooks.html">
+                    </a>
+                    <a class="navbar-item" href="notebooks.html">
                     Notebooks
-                </a>
-            
-            </div>
-
-            <div class="navbar-end">
-            <div class="navbar-item">
-                <div class="buttons">
-                <a class="button is-primary">
-                    <strong>Log Out</strong>
-                </a>
+                    </a>
+                </div>
+                <div class="navbar-end">
+                    <div class="navbar-item">
+                        <div class="buttons">
+                            <a class="button is-primary">
+                            <strong>Log Out</strong>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
-            </div>
-        </div>
-    </nav>     
-    <section class="hero is-medium has-text-centered">
-        <div class="hero-body">
-            <p class="title">
-            Notebooks
-            </p>
-        </div>
-    </section>
-</body>
+        </nav>
+        <section class="hero is-medium has-text-centered">
+            <div class="hero-body">
+                <p class="title">
+                    Notebook            
+                </p>
 
+                <button id="authorize_button" style="display: none;">Authorize</button>
+                <button id="signout_button" style="display: none;">Sign Out</button> 
+
+                <div class="column is-one-third is-centered has-text-left">
+                    <div class="field">
+                        <label class="label">Title</label>
+                        <div class="control">
+                            <input class="input is-medium" type="text" id="noteTitle">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Note</label>
+                        <div class="control">
+                            <textarea class="textarea is-medium" id="noteText"></textarea>
+                        </div>
+                    </div>
+                    <div class="control">
+                        <button class="button is-link is-fullwidth has-text-weight-medium is-medium" onclick="handleNoteSubmit()">Create Note</button>
+                    </div>
+                </div>
+
+                <div id="container" class="columns is-multiline">                
+                </div>                
+            </div>
+        </section>
+        <script type="text/javascript">
+            // Client ID and API key from the Developer Console
+            var CLIENT_ID = '243003109957-8bpj74e6eib10r888ccleeh1t0lhqp8g.apps.googleusercontent.com';
+            var API_KEY = 'AIzaSyDEL7uevoZ_rQ3JLHWDTqHGKrWvTRG-tKY';
+            
+                // Array of API discovery doc URLs for APIs used by the quickstart
+            var DISCOVERY_DOCS = ['https://docs.googleapis.com/$discovery/rest?version=v1'];
+            
+            // Authorization scopes required by the API; multiple scopes can be
+            // included, separated by spaces.
+            var SCOPES = "https://www.googleapis.com/auth/documents";
+            
+            var authorizeButton = document.getElementById('authorize_button');
+            var signoutButton = document.getElementById('signout_button');
+            
+            /**
+             *  On load, called to load the auth2 library and API client library.
+             */
+            function handleClientLoad() {
+                gapi.load('client:auth2', initClient);
+            }
+            
+            /**
+             *  Initializes the API client library and sets up sign-in state
+             *  listeners.
+             */
+            function initClient() {
+                gapi.client.init({
+                apiKey: API_KEY,
+                clientId: CLIENT_ID,
+                discoveryDocs: DISCOVERY_DOCS,
+                scope: SCOPES
+                }).then(function() {
+                // Listen for sign-in state changes.
+                gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
+            
+                // Handle the initial sign-in state.
+                updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+                authorizeButton.onclick = handleAuthClick;
+                signoutButton.onclick = handleSignoutClick;
+                });
+            }
+            
+            /**
+             *  Called when the signed in status changes, to update the UI
+             *  appropriately. After a sign-in, the API is called.
+             */
+            function updateSigninStatus(isSignedIn) {
+                if (isSignedIn) {
+                authorizeButton.style.display = 'none';
+                signoutButton.style.display = 'block';
+                } else {
+                authorizeButton.style.display = 'block';
+                signoutButton.style.display = 'none';
+                }
+            }
+            
+            /**
+             *  Sign in the user upon button click.
+             */
+            function handleAuthClick(event) {
+                gapi.auth2.getAuthInstance().signIn();
+            }
+            
+            /**
+             *  Sign out the user upon button click.
+             */
+            function handleSignoutClick(event) {
+                gapi.auth2.getAuthInstance().signOut();
+            }        
+        </script>
+        <script defer src="js/notebook.js"></script>
+        <script async="" defer="" onload="this.onload=function(){};handleClientLoad()" onreadystatechange="if (this.readyState === 'complete') this.onload()" src="https://apis.google.com/js/api.js"></script>
+    </body>
 </html>
