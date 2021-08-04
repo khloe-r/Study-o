@@ -81,7 +81,10 @@ function handleAuthClick(event) {
 
 // function load the calendar api and make the api call
 function makeApiCall() {
+    console.log("Testing!");
     if (document.querySelector("#dueDateInput").value.length !== 0 && document.querySelector("#titleInput").value.length !== 0 && document.querySelector("#dueTimeInput").value.length !== 0) {
+            console.log("Success!");
+
         let testing = new Date(`${document.querySelector("#dueDateInput").value}T${document.querySelector("#dueTimeInput").value}:00`);
         gapi.client.load('calendar', 'v3', function () {
             var dateWTime = testing.toISOString();					// load the calendar api (version 3)
@@ -95,7 +98,8 @@ function makeApiCall() {
                         "dateTime": dateWTime
                     },
                     "description": document.querySelector("#descriptionInput").value,
-                    "summary": document.querySelector("#titleInput").value
+                    "summary": document.querySelector("#titleInput").value,
+                    "location": "Study-O Homework Tracker"
                 }
             });
 
@@ -114,9 +118,10 @@ function makeApiCall() {
                     //document.getElementById('event-response').innerHTML = "Event created successfully. View it <a href='" + resp.htmlLink + "'>online here</a>.";
                     console.log("successfully submitted!");
                     alert("it submitted!");
-                    location.reload();
+                   // location.reload();
                 } else {
                     console.log(errr);
+                    console.log("did not work");
                     //document.getElementById('event-response').innerHTML = "There was a problem. Reload page and try again.";
                     // calendarList.get('primary')
                 }
