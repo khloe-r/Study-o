@@ -59,7 +59,7 @@ const createDoc = (title, text) => {
         })
         .then((response) => {
             console.log(response.result);
-            displayDoc(docId);
+            displayAllDocs();
         });
     });  
 }
@@ -91,6 +91,7 @@ const displayDoc = (docId) => {
 }
 
 const displayAllDocs = () => {
+    document.querySelector("#container").innerHTML = "";
     const notesRef = firebase.database().ref(`users/${googleUserId}`);
     notesRef.on('value', (snapshot) => {
         const data = snapshot.val();
@@ -101,7 +102,7 @@ const displayAllDocs = () => {
     });
 }
 
-const handleNoteSubmit = () => {
+const addNote = () => {
     const noteTitle = document.querySelector('#noteTitle');
     const noteText = document.querySelector('#noteText');
 

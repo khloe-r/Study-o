@@ -50,36 +50,55 @@
                 </div>
             </div>
         </nav>
-        <section class="hero is-medium has-text-centered">
+        <section class="hero is-small has-text-centered">
             <div class="hero-body">
                 <p class="title">
-                    Notebook            
+                    Notebook
                 </p>
-                <button id="authorize_button" style="display: none;">Authorize</button>
-                <button id="signout_button" style="display: none;">Sign Out</button> 
-
-                <div class="column is-one-third is-centered has-text-left">
-                    <div class="field">
-                        <label class="label">Title</label>
-                        <div class="control">
-                            <input class="input is-medium" type="text" id="noteTitle">
-                        </div>
-                    </div>
-                    <div class="field">
-                        <label class="label">Note</label>
-                        <div class="control">
-                            <textarea class="textarea is-medium" id="noteText"></textarea>
-                        </div>
-                    </div>
-                    <div class="control">
-                        <button class="button is-link is-fullwidth has-text-weight-medium is-medium" onclick="handleNoteSubmit()">Create Note</button>
-                    </div>
-                </div>
-
-                <div id="container" class="columns is-multiline">                
-                </div>                
             </div>
         </section>
+        <button id="authorize_button" style="display: none;">Authorize</button>
+        <button id="signout_button" style="display: none;">Sign Out</button>
+
+        <section class="hero is-small">
+            <div class="hero-body">
+                <div class="columns">
+                    <div class="column">
+                        <p class="title has-text-centered">
+                            Recently Edited
+                        </p>
+                        <div id="recent" class="columns is-multiline">
+                        </div>
+                    </div>
+                    <div class="column">
+                        <p class="title has-text-centered">
+                            Add a Note
+                        </p>
+                        <form class="box">
+                            <div class="field">
+                                <label class="label">Note Title</label>
+                                <div class="control">
+                                    <input class="input" type="text" id="noteTitle">
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label class="label">Note Content</label>
+                                <div class="control">
+                                    <textarea class="textarea is-medium" id="noteText"></textarea>
+                                </div>
+                            </div>
+                            <div class="control">
+                                <button class="button is-link is-fullwidth has-text-weight-medium is-medium" onclick="addNote()">Create Note</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="container" class="columns is-multiline">
+        </section>
+
         <script type="text/javascript">
             // Client ID and API key from the Developer Console
             var CLIENT_ID = '243003109957-8bpj74e6eib10r888ccleeh1t0lhqp8g.apps.googleusercontent.com';
