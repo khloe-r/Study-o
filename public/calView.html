@@ -12,6 +12,8 @@
     <script defer src="/__/firebase/8.3.1/firebase-database.js"></script>
     <script defer src="/__/firebase/init.js?useEmulator=true"></script>
     <script src="js/calendarView.js"></script>
+
+
 </head>
 
 <body>
@@ -61,16 +63,53 @@
                     </div>
 
                 </div>
+                <button class="button is-light" id="submitButton" onclick="makeApiCall()">Add Event!</button>
+
             </form>
-            <button class="button is-light" id="submitButton" onclick = "makeApiCall()">Add Event!</button>
-            <iframe src="https://calendar.google.com/calendar/embed?src=bhatiasiapictures%40gmail.com&ctz=America%2FToronto" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
+            <!-- <iframe src="https://calendar.google.com/calendar/embed?src=bhatiasia%40gmail.com&ctz=America%2FToronto" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe> -->
 
 
         </div>
 
 
     </div>
+    <div id="calendar">
+        <div class="content has-text-centered is-underlined">
+            <h1>Calendar</h1>
+        </div>
+        <table class="table is-fullwidth is-bordered">
+            <caption>
+                <span id = "month">April</span>
+                <br>
+                <span id = "lArrow"><</span>
+                <span id = "rArrow"> ></span>
+                <br>
+                <span id = "year">2019</span>
+            </caption>
+            <thead>
+                <tr>
+                    <th>Sun</th>
+                    <th>Mon</th>
+                    <th>Tue</th>
+                    <th>Wed</th>
+                    <th>Thu</th>
+                    <th>Fri</th>
+                    <th>Sat</th>
+
+                    
+                </tr>
+            </thead>
+            <tbody id = "tableBody">
+                
+            </tbody>
+
+
+        </table>
+
+    </div>
+
+
 </body>
-    
+
 
 </html>

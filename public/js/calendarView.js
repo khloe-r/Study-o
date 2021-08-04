@@ -2,6 +2,7 @@ console.log("script running");
 // date variables
 var now = new Date();
 today = now.toISOString();
+let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 var twoHoursLater = new Date(now.getTime() + (2 * 1000 * 60 * 60));
 twoHoursLater = twoHoursLater.toISOString();
@@ -18,6 +19,18 @@ var scopes = 'https://www.googleapis.com/auth/calendar';
 function handleClientLoad() {
     gapi.client.setApiKey(apiKey);
     window.setTimeout(checkAuth, 1);
+    var weekdays = [
+        'Sunday',
+        'Monday',
+        'Tuesday',
+        'Wednesday',
+        'Thursday',
+        'Friday',
+        'Saturday'
+    ];
+
+    console.log(weekdays[new Date().getDay()]);
+    genCal(2021, 0);
 }
 
 function checkAuth() {
@@ -66,7 +79,7 @@ function handleAuthClick(event) {
 // function load the calendar api and make the api call
 function makeApiCall() {
     if (document.querySelector("#dueDateInput").value.length !== 0 && document.querySelector("#titleInput").value.length !== 0 && document.querySelector("#dueTimeInput").value.length !== 0) {
-        let testing = new Date(`${document.querySelector("#dueDateInput").value}T${ document.querySelector("#dueTimeInput").value}:00`);
+        let testing = new Date(`${document.querySelector("#dueDateInput").value}T${document.querySelector("#dueTimeInput").value}:00`);
         gapi.client.load('calendar', 'v3', function () {
             var dateWTime = testing.toISOString();					// load the calendar api (version 3)
             var request = gapi.client.calendar.events.insert({
@@ -79,7 +92,7 @@ function makeApiCall() {
                         "dateTime": dateWTime
                     },
                     "description": document.querySelector("#descriptionInput").value,
-                    "summary":document.querySelector("#titleInput").value
+                    "summary": document.querySelector("#titleInput").value
                 }
             });
 
@@ -98,6 +111,7 @@ function makeApiCall() {
                     //document.getElementById('event-response').innerHTML = "Event created successfully. View it <a href='" + resp.htmlLink + "'>online here</a>.";
                     console.log("successfully submitted!");
                     alert("it submitted!");
+                    location.reload();
                 } else {
                     console.log(errr);
                     //document.getElementById('event-response').innerHTML = "There was a problem. Reload page and try again.";
@@ -109,12 +123,50 @@ function makeApiCall() {
             });
         });
 
+
     }
     else {
         alert("Fill in all fields");
     }
 
 }
+function genCal(year, month) {
+    let startOfMonth = new Date(year, month).getDay();
+    let numOfDays = 32 - new Date(year, month, 32).getDate();
+    let renderMonth = document.querySelector("#month");
+    let renderYear = document.querySelector("#year");
+
+    renderMonth.textContent = months[`${month}`];
+    renderYear.textContent = year;
+
+    let renderNum = 1;
+    let tableBody = document.querySelector("#tableBody")
+
+    for (let i = 0; i < 6; i++) {
+        let row = document.createElement('tr');
+        for (let j = 0; j < 7; j++) {
+            if (i === 0 && j < startOfMonth) {
+                let td = document.createElement('td');
+                td.classList.add('empty');
+                row.append(td);
+            }
+            else if (renderNum > numOfDays) {
+                break;
+            }
+            else {
+                let td = document.createElement('td');
+                td.textContent = renderNum;
+                row.append(td);
+                renderNum++;
+
+            }
+        }
+        tableBody.append(row);
+    }
+
+
+}
+
 // let buttonSubmit = document.querySelector("#submitButton");
 // buttonSubmit.addEventListener("click", function() {
 //   makeApiCall();
