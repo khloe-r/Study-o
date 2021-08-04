@@ -1,11 +1,13 @@
+// Cloud Storage
+console.log("script run")
+
 const fileInput = document.querySelector('#fileUpload')
 const fileName = document.querySelector('#fileUploadName');
 const fileList = document.querySelector('#fileList')
-console.log(fileInput)
-fileInput.onchange = () => {
+fileInput.onchange = () => { 
     if (fileInput.files.length > 0) {
     fileName.textContent = fileInput.files[0].name;
-    }
+    } 
 }
 
 window.onload = () => {
@@ -31,11 +33,9 @@ const submitFile = () => {
 const listFiles = () => {
     let userID = ''
     fileList.innerHTML = ''
-    console.log('printing files')
     firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
             userID = user.uid;
-            console.log(userID)
             // Create a reference under which you want to list
             var storageRef = firebase.storage().ref()
             var listRef = storageRef.child(`${userID}/`);
@@ -45,19 +45,15 @@ const listFiles = () => {
             listRef.list()
             .then((res) => {
                 res.prefixes.forEach((folderRef) => {
-                    // console.log(`folder ${folderRef.name}`)
-                    // fileList.innerHTML += `<h1 class="title">${folderRef.name}</h1>`
-                    // hierarchy[`${folderRef.name}`] = []
+                   
                     folderRef.list()
                     .then((resRef) => {
                         resRef.items.forEach((itemRef, index) => {
-                            // console.log(`item ${itemRef.parent.name}`)
                             if (index === 0) {
                                 fileList.innerHTML += `<h1 class="title mt-4">${itemRef.parent.name}</h1>`
                             }
-                            fileList.innerHTML += `<p class="subtitle" onclick="downloadFile('${itemRef.parent.name}', '${itemRef.name}')">${itemRef.name}</p>`
-                            // hierarchy[itemRef.parent.name].push(itemRef.name)
-                            // console.log(hierarchy)
+                            fileList.innerHTML += `<p class="subtitle is-clickable" onclick="downloadFile('${itemRef.parent.name}', '${itemRef.name}')">${itemRef.name}</p>`
+
                         })
                     })
                 });
@@ -69,7 +65,6 @@ const listFiles = () => {
 }
 
 const downloadFile = (parent, child) => {
-    console.log("hello")
     let userID = ''
     firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
@@ -94,7 +89,6 @@ const downloadFile = (parent, child) => {
                 myDownload.setAttribute('download', child);
             })
             .catch((error) => {
-                console.log("ERROR")
                 console.log(error)
             });
         }
