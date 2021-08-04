@@ -1,7 +1,10 @@
 console.log("script running");
 // date variables
 var now = new Date();
-today = now.toISOString();
+var currentMonth = now.getMonth();
+var currentYear = now.getFullYear();
+var monthRn;
+var yearRn; 
 let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 var twoHoursLater = new Date(now.getTime() + (2 * 1000 * 60 * 60));
@@ -30,7 +33,7 @@ function handleClientLoad() {
     ];
 
     console.log(weekdays[new Date().getDay()]);
-    genCal(2021, 0);
+    genCal(currentYear, currentMonth);
 }
 
 function checkAuth() {
@@ -135,6 +138,8 @@ function genCal(year, month) {
     let numOfDays = 32 - new Date(year, month, 32).getDate();
     let renderMonth = document.querySelector("#month");
     let renderYear = document.querySelector("#year");
+    monthRn = month;
+    yearRn = year;
 
     renderMonth.textContent = months[`${month}`];
     renderYear.textContent = year;
@@ -155,7 +160,7 @@ function genCal(year, month) {
             }
             else {
                 let td = document.createElement('td');
-                td.textContent = renderNum;
+                td.textContent = `${renderNum}`;
                 row.append(td);
                 renderNum++;
 
@@ -163,8 +168,41 @@ function genCal(year, month) {
         }
         tableBody.append(row);
     }
+    
 
 
+}
+function moveRight(year, month){
+    tableBody.innerHTML = '';
+    if(monthRn === 11){
+        yearRn+=1;
+        year = yearRn;
+        monthRn = 0;
+        month = monthRn;
+        genCal(year,month);
+    }
+    else{
+        monthRn +=1;
+        month = monthRn;
+        year = yearRn;
+        genCal(year, month);
+    }
+}
+function moveLeft(year, month){
+    tableBody.innerHTML = '';
+    if(monthRn === 0){
+        yearRn-=1;
+        year = yearRn;
+        monthRn = 11;
+        month = monthRn;
+        genCal(year,month);
+    }
+    else{
+        monthRn -=1;
+        month = monthRn;
+        year = yearRn;
+        genCal(year, month);
+    }
 }
 
 // let buttonSubmit = document.querySelector("#submitButton");

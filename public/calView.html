@@ -79,12 +79,12 @@
         </div>
         <table class="table is-fullwidth is-bordered">
             <caption>
-                <span id = "month">April</span>
+                <span id = "month"></span>
                 <br>
-                <span id = "lArrow"><</span>
-                <span id = "rArrow"> ></span>
+                <button class="button is-text" id = "leftArrow" onclick = "moveLeft()"><</button>
+                <button class="button is-text" id = "rightArrow" onclick = "moveRight()">></button>
                 <br>
-                <span id = "year">2019</span>
+                <span id = "year"></span>
             </caption>
             <thead>
                 <tr>
@@ -95,12 +95,9 @@
                     <th>Thu</th>
                     <th>Fri</th>
                     <th>Sat</th>
-
-                    
                 </tr>
             </thead>
             <tbody id = "tableBody">
-                
             </tbody>
 
 
