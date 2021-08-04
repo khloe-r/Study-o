@@ -4,7 +4,7 @@ console.log("script run")
 const fileInput = document.querySelector('#fileUpload')
 const fileName = document.querySelector('#fileUploadName');
 const fileList = document.querySelector('#fileList')
-fileInput.onchange = () => {
+fileInput.onchange = () => { 
     if (fileInput.files.length > 0) {
     fileName.textContent = fileInput.files[0].name;
     } 

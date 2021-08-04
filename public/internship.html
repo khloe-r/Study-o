@@ -14,7 +14,6 @@
     <script defer src="/__/firebase/8.8.1/firebase-storage.js"></script>
     <script defer src="/__/firebase/init.js?useEmulator=true"></script>
     <script src="js/logout.js"></script>
-    <script src="js/internshipCal.js"></script>
 </head>
 
 <body> 
@@ -71,49 +70,63 @@
         </div>
     </section>
     <!-- Add Application Form -->
+    <button id="authorize_button" style="display: none;">Authorize</button>
+    <button id="signout_button" style="display: none;">Sign Out</button> 
     <section class="hero is-small">
         <div class="hero-body">
-            <p class="title has-text-centered">
-            Add an Application
-            </p> 
-            <form class="box">
-                <div class="field">
-                    <label class="label">Internship Name</label>
-                    <div class="control">
-                        <input class="input" placeholder="e.g. STEP Intern @ Google" id="titleInput">
-                    </div>
-                </div>
-                <div class="field">
-                    <label class="label">Internship Description (Optional)</label>
-                    <div class="control">
-                        <input class="input" placeholder="e.g. Student Training in Engineering Program" id="descriptionInput">
-                    </div>
-                </div>
-                <div class="field">
-                    <label class="label">Application Date Deadline</label>
-                    <div class="control">
-                        <input class="input" type="date" id="deadlineInput">
-                    </div>
-                </div>
-                <div class="field">
-                    <label class="label">Application Time Deadline</label>
-                    <div class="control">
-                        <input class="input" type="time" id="dueTimeInput">
-                    </div>
-                </div>
-                <div class="field">
-                    <label class="label">Status</label>
-                    <div class="select">
-                        <select id="statusInput">
-                            <option>Have to Apply</option>
-                            <option>Applied & Waiting</option>
-                            <option>Interview Stage</option>
-                        </select>
-                    </div>
+            <div class="columns">
+                <div class="column">
+                    <p class="title has-text-centered">
+                        View Applications
+                    </p> 
+                    <div id="listView">
 
+                    </div>
                 </div>
-            </form>
-            <button class="button is-light" id="submitButton" onclick = "addApplication()">Add Application</button>
+                <div class="column">
+                    <p class="title has-text-centered">
+                    Add an Application
+                    </p> 
+                    <form class="box">
+                        <div class="field">
+                            <label class="label">Internship Name</label>
+                            <div class="control">
+                                <input class="input" placeholder="e.g. STEP Intern @ Google" id="titleInput">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Internship Description (Optional)</label>
+                            <div class="control">
+                                <input class="input" placeholder="e.g. Student Training in Engineering Program" id="descriptionInput">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Application Date Deadline</label>
+                            <div class="control">
+                                <input class="input" type="date" id="deadlineInput">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Application Time Deadline</label>
+                            <div class="control">
+                                <input class="input" type="time" id="dueTimeInput">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Status</label>
+                            <div class="select">
+                                <select id="statusInput">
+                                    <option>Have to Apply</option>
+                                    <option>Applied & Waiting</option>
+                                    <option>Interview Stage</option>
+                                </select>
+                            </div>
+
+                        </div>
+                    </form>
+                    <button class="button is-light" id="submitButton" onclick = "addApplication()">Add Application</button>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -158,6 +171,11 @@
             </div>
         </div>
     </section>
+    <script async defer src="https://apis.google.com/js/api.js"
+      onload="this.onload=function(){};handleClientLoad()"
+      onreadystatechange="if (this.readyState === 'complete') this.onload()">
+    </script>
+    <script src="js/internshipCal.js"></script>
     <script src="js/internship.js"></script>
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
