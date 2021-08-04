@@ -1,4 +1,18 @@
-let docIdList = []
+let googleUserId;
+
+window.onload = () => {
+// When page loads, check user logged in state
+    firebase.auth().onAuthStateChanged((user) => {
+        if (user) {            
+            googleUserId = user.uid;
+            console.log(`Google User ID: ${googleUserId}`);
+            displayAllDocs();
+        } else {
+            // If not logged in redirect to log in page
+            window.location = 'index.html';
+        }
+    }); 
+}
 
 const createNote = (title, text) => {
     const card = 
@@ -14,7 +28,7 @@ const createNote = (title, text) => {
         </div>
     </div>
     `
-    document.querySelector("#container").innerHTML += card;
+    return card;
 }
 
 const createDoc = (title, text) => {
@@ -24,9 +38,13 @@ const createDoc = (title, text) => {
     .then((response) => {        
         const doc = response.result;
         const docId = doc.documentId;
-        docIdList.push(docId);
 
-        // TODO: Need to store document ID in database (under user key) to know which documents we can view
+        firebase.database().ref(`users/${googleUserId}`).push({
+            documentId: docId
+        })
+        .then(() => {
+            console.log("Pushed to database");
+        });
 
         gapi.client.docs.documents.batchUpdate({
             documentId: docId,
@@ -41,11 +59,12 @@ const createDoc = (title, text) => {
         })
         .then((response) => {
             console.log(response.result);
+            displayDoc(docId);
         });
     });  
 }
 
-const readDoc = (docId) => {
+const displayDoc = (docId) => {
     gapi.client.docs.documents.get({
         documentId: docId
     })
@@ -66,7 +85,19 @@ const readDoc = (docId) => {
             }
         }
 
-        createNote(title, text);
+        const card = createNote(title, text);
+        document.querySelector("#container").innerHTML += card;
+    });
+}
+
+const displayAllDocs = () => {
+    const notesRef = firebase.database().ref(`users/${googleUserId}`);
+    notesRef.on('value', (snapshot) => {
+        const data = snapshot.val();
+        for (const noteId in data) {
+            const docId = data[noteId].documentId;
+            displayDoc(docId);
+        }
     });
 }
 
