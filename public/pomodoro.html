@@ -58,13 +58,31 @@
             </div>
         </div>
     </nav>     
-    <section class="hero is-medium has-text-centered">
+    <section class="hero is-small has-text-centered">
         <div class="hero-body">
-            <p class="title">
+            <p class="is-size-2 has-text-weight-semibold">
             Pomodoro Timer
             </p>
+            <p>
+            Choose your type of study session
+            </p>
+            <div class="select mt-2">
+                <select id="studySession">
+                    <option>Study (25 minutes)</option>
+                    <option>Short Break (5 minutes)</option>
+                    <option>Long Break (15 minutes)</option>
+                </select>
+            </div>
+            <h1 class="has-text-weight-semibold mt-4 is-size-1"><span id="minute">25</span>:<span id="second">00</span></h1>
+            <p>Minutes Remaining</p>
+            <div class="is-flex is-justify-content-center mt-2">
+                <button class="button mr-2" id="trigger" onclick="start()">Start</button>
+                <button class="button ml-2" id="reset" onclick="reset()">Reset</button>
+            </div>
+            <progress class="progress is-success mt-5" id="progressBar" value="0" max="1500">60%</progress>
         </div>
     </section>
+    <script src="js/pomodoro.js"></script>
 </body>
 
 </html>
