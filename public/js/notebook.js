@@ -1,65 +1,8 @@
-/**
- * Append a pre element to the body containing the given message
- * as its text node. Used to display the results of the API call.
- *
- * @param {string} message Text to be placed in pre element.
- */
-function appendPre(message) {
-    var pre = document.getElementById('content');
-    var textContent = document.createTextNode(message + '\n');
-    console.log(textContent);
-}
-
-/**
- * Prints the title of a sample doc:
- * https://docs.google.com/document/d/195j9eDD3ccgjQRttHhJPymLJUCOUjs-jmwTrekvdjFE/edit
- */
-function printDocTitle() {
-    gapi.client.docs.documents.get({
-    documentId: '195j9eDD3ccgjQRttHhJPymLJUCOUjs-jmwTrekvdjFE'
-    }).then(function(response) {
-    var doc = response.result;
-    var title = doc.title;
-    appendPre('Document "' + title + '" successfully found.\n');
-    }, function(response) {
-    appendPre('Error: ' + response.result.error.message);
-    });
-}
-
-const createDoc = (title, content) => {
-    gapi.client.docs.documents.create({
-        "title": title
-    })
-    .then((response) => {        
-        const doc = response.result;
-        const docId = doc.documentId;
-
-        // TODO: Need to store document ID in database (under user key) to know which documents we can view
-
-        gapi.client.docs.documents.batchUpdate({
-            documentId: docId,
-            requests: [{
-                insertText: {
-                    text: content,
-                    location: {
-                        index: 1,
-                    },
-                },
-            }],
-        })
-        .then((response) => {
-            console.log(response.result);
-        })
-    });  
-}
-
-const handleNoteSubmit = () => {
-    const noteTitle = document.querySelector('#noteTitle');
-    const noteText = document.querySelector('#noteText');
-}
+let docIdList = []
 
 const createNote = (title, text) => {
-    return `
+    const card = 
+    `
     <div class="column is-one-third">
         <div class="card">
             <header class="card-header">
@@ -71,4 +14,67 @@ const createNote = (title, text) => {
         </div>
     </div>
     `
+    document.querySelector("#container").innerHTML += card;
+}
+
+const createDoc = (title, text) => {
+    gapi.client.docs.documents.create({
+        title: title
+    })
+    .then((response) => {        
+        const doc = response.result;
+        const docId = doc.documentId;
+        docIdList.push(docId);
+
+        // TODO: Need to store document ID in database (under user key) to know which documents we can view
+
+        gapi.client.docs.documents.batchUpdate({
+            documentId: docId,
+            requests: [{
+                insertText: {
+                    text: text,
+                    location: {
+                        index: 1,
+                    },
+                },
+            }],
+        })
+        .then((response) => {
+            console.log(response.result);
+        });
+    });  
+}
+
+const readDoc = (docId) => {
+    gapi.client.docs.documents.get({
+        documentId: docId
+    })
+    .then((response) => {
+        const doc = response.result;
+        const title = doc.title;
+        const content = doc.body.content;
+        
+        let text = "";
+        for (const contentObject of content) {
+            if ("paragraph" in contentObject) {
+                const elements = contentObject.paragraph.elements;
+                for (const element of elements) {
+                    if ("textRun" in element) {
+                        text += element.textRun.content;
+                    }
+                }
+            }
+        }
+
+        createNote(title, text);
+    });
+}
+
+const handleNoteSubmit = () => {
+    const noteTitle = document.querySelector('#noteTitle');
+    const noteText = document.querySelector('#noteText');
+
+    createDoc(noteTitle.value, noteText.value);
+    noteTitle.value = "";
+    noteText.value = "";
 }
