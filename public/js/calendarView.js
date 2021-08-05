@@ -33,7 +33,7 @@ function handleClientLoad() {
     //     'Friday',
     //     'Saturday'
     // ];
-    
+
     //genCal(currentYear, currentMonth);
 }
 
@@ -98,6 +98,19 @@ function makeApiCall() {
     if (document.querySelector("#dueDateInput").value.length !== 0 && document.querySelector("#titleInput").value.length !== 0 && document.querySelector("#dueTimeInput").value.length !== 0) {
         let testing = new Date(`${document.querySelector("#dueDateInput").value}T${document.querySelector("#dueTimeInput").value}:00`);
         gapi.client.load('calendar', 'v3', function () {
+            let tagColour = '';
+            let colourId = 0;
+            let status = document.querySelector("#lengthInput");
+            if (status.value === 'More than an hour') {
+            tagColour = 'is-danger'
+            colourID = 4
+            } else if (status.value === '30 minutes to an hour') {
+                tagColour = 'is-warning'
+                colourID = 5
+            } else {
+                tagColour = 'is-success'
+                colourID = 2
+            }
             var dateWTime = testing.toISOString();					// load the calendar api (version 3)
             var request = gapi.client.calendar.events.insert({
                 'calendarId': 'primary',	// calendar ID
@@ -110,7 +123,9 @@ function makeApiCall() {
                     },
                     "description": document.querySelector("#descriptionInput").value,
                     "summary": document.querySelector("#titleInput").value,
-                    "location": "Study-O Homework Tracker"
+                    "location": "Study-O Homework Tracker",
+                    "showDeleted": false,
+                    "colorId": colourID
                 }
             });
 
@@ -130,7 +145,7 @@ function makeApiCall() {
                 if (resp.status == 'confirmed') {
                     //document.getElementById('event-response').innerHTML = "Event created successfully. View it <a href='" + resp.htmlLink + "'>online here</a>.";
                     console.log("successfully submitted!");
-                   // alert("it submitted!");
+                    // alert("it submitted!");
                     location.reload();
                 } else {
                     console.log(errr);
@@ -151,43 +166,6 @@ function makeApiCall() {
     }
 
 }
-
-
-// function getCalendarEvents(year, month, td, numb) {
-
-//     gapi.client.load('calendar', 'v3', () => {
-//         gapi.client.calendar.events.list({
-//             "calendarId": "primary",
-//             "q": "Study-O Homework Tracker"
-//         })
-//             .then(function (response) {
-//                 let events = response.result.items;
-//                 if (events.length > 0) {
-//                     for (i = 0; i < events.length; i++) {
-//                         var event = events[i];
-//                         let day = event.start.dateTime;
-//                         let yr = parseInt(day.slice(0, 4));
-//                         let mon = parseInt(day.slice(5, 7) - 1);
-//                         let num = parseInt(day.slice(8, 10));
-//                         if (mon === month && yr === year && num == numb) {
-
-//                             td.name = "test";
-//                             td.innerHTML += `<p>${numb}</p> 
-//                                                 <p>${event.summary}</p>`;
-//                             console.log(td);
-//                             // console.log('true');
-//                         }
-//                         else {
-//                             td.innerHTML = `${numb}`;
-//                         }
-
-//                     }
-//                 }
-//             },
-//                 function (err) { console.error("Execute error", err); });
-
-//     });
-// }
 
 function genCal(year, month) {
     let startOfMonth = new Date(year, month).getDay();
@@ -224,7 +202,32 @@ function genCal(year, month) {
 
                 if (curEvents != null && curEvents.length != 0) {
                     Object.values(curEvents).forEach((e) => {
-                        td.innerHTML += `<p>${e.summary} - Due at: ${e.start.dateTime.slice(11, 16)}</p>`;
+                        td.innerHTML += `<div class="columns">
+                                                <div class="column is-11">
+                                                    <p class="subtitle is-clickable" onclick ="toggleModal('${e.id}')"> ${e.summary} 
+                                                    </p>
+                                                    <div class="modal" id = '${e.id}'>
+                                                        <div class="modal-background"></div>
+                                                            <div class="modal-card">
+                                                                <header class="modal-card-head">
+                                                                    <p class="modal-card-title">${e.summary}</p>
+
+                                                                    <button class="delete" onclick = "toggleModal('${e.id}')" aria-label="close"></button>
+                                                                </header>
+                                                            <section class="modal-card-body">
+                                                                <p>This is due at: ${e.start.dateTime.slice(11,16)}!</p>
+                                                                <p>
+                                                                ${getDescription(e)}
+                                                                </p>
+                                                            </section>
+                                                            <footer class="modal-card-foot">
+                                                                <button class="button" onclick = "deleteEvent('${e.id}')">Delete Event</button>
+                                                            </footer>
+                                                        
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                        </div>`;
                     });
                 }
 
@@ -278,17 +281,30 @@ function moveLeft(year, month) {
 
     }
 }
+function toggleModal(evId) {
+    document.getElementById(`${evId}`).classList.toggle('is-active');
 
-// let buttonSubmit = document.querySelector("#submitButton");
-// buttonSubmit.addEventListener("click", function() {
-//   makeApiCall();
-// // });
-// var events;
+}
+function getDescription(event){
+    let str = ``;
+    if(event.description!= null){
+        str+=event.description;
+    }
+    return `${str}`;
+}
+function deleteEvent(evId){
+    console.log(`${evId}`);
+    
+    return gapi.client.calendar.events.delete({
+        'calendarId': 'primary',
+        'eventId': `${evId}`
+    })
+        .then(function(response) {
+                // Handle the results here (response.result has the parsed body).
+                toggleModal(`${evId}`);
+                location.reload();
+              },
+              function(err) { console.error("Execute error", err); });
 
-// function showEventOnCalendar(response) {
-//     let bod = document.querySelector("#tableBody");
+}
 
-
-
-
-// }
