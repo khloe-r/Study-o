@@ -116,7 +116,7 @@ const displayAllDocs = () => {
     const notesRef = firebase.database().ref(`users/${googleUserId}`);
     notesRef.on('value', (snapshot) => {
         const data = snapshot.val();
-        if (count < Object.keys(data).length) {            
+        if (data && count < Object.keys(data).length) {            
             for (const noteId in data) {
                 const docId = data[noteId].documentId;
                 displayDoc(noteId, docId);
@@ -296,17 +296,19 @@ const findRecentlyEdited = () => {
 
     const notesRef = firebase.database().ref(`users/${googleUserId}`);
     notesRef.on('value', (snapshot) => {
-        const data = snapshot.val();          
-        for (const noteId in data) {
-            itemList.push(data[noteId]);
-        }
+        const data = snapshot.val();
+        if (data) {                   
+            for (const noteId in data) {
+                itemList.push(data[noteId]);
+            }
 
-        itemList.sort((x, y) => {
-            return y.timestamp - x.timestamp;
-        });
+            itemList.sort((x, y) => {
+                return y.timestamp - x.timestamp;
+            });
 
-        for (let i = 0; i < 4; i++) {
-            displayRecentlyEdited(itemList[i].documentId, itemList[i].timestamp, itemList[i].percentChange);
+            for (let i = 0; i < Math.min(itemList.length, 4); i++) {
+                displayRecentlyEdited(itemList[i].documentId, itemList[i].timestamp, itemList[i].percentChange);
+            }
         }
     });
 }
