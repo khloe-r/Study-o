@@ -1,4 +1,4 @@
-let googleUserId;
+let googleUserId, editedNoteId, editedDocId;
 
 window.onload = () => {
 // When page loads, check user logged in state
@@ -6,7 +6,7 @@ window.onload = () => {
         if (user) {            
             googleUserId = user.uid;
             console.log(`Google User ID: ${googleUserId}`);
-            displayAllDocs();
+            initialSetup();            
         } else {
             // If not logged in redirect to log in page
             window.location = 'index.html';
@@ -14,7 +14,7 @@ window.onload = () => {
     }); 
 }
 
-const createNote = (title, text) => {
+const createNote = (noteId, docId, title, text) => {
     const card = 
     `
     <div class="column is-one-third">
@@ -25,7 +25,13 @@ const createNote = (title, text) => {
             <div class="card-content">
                 <div class="content">${text}</div>
             </div>
-        </div>
+            <footer class="card-footer">
+                <a href="#" class="button is-light"
+                    onclick="editDoc('${noteId}', '${docId}')">
+                    Edit
+                </a>
+            </footer>
+        </div>        
     </div>
     `
     return card;
@@ -38,9 +44,11 @@ const createDoc = (title, text) => {
     .then((response) => {        
         const doc = response.result;
         const docId = doc.documentId;
+        const time = Date.now();
 
         firebase.database().ref(`users/${googleUserId}`).push({
-            documentId: docId
+            documentId: docId,
+            timestamp: time
         })
         .then(() => {
             console.log("Pushed to database");
@@ -59,12 +67,21 @@ const createDoc = (title, text) => {
         })
         .then((response) => {
             console.log(response.result);
-            displayDoc(docId);
+            displayAllDocs();
         });
     });  
 }
 
-const displayDoc = (docId) => {
+const addNote = () => {
+    const noteTitle = document.querySelector('#noteTitle');
+    const noteText = document.querySelector('#noteText');
+
+    createDoc(noteTitle.value, noteText.value);
+    noteTitle.value = "";
+    noteText.value = "";
+}
+
+const displayDoc = (noteId, docId) => {
     gapi.client.docs.documents.get({
         documentId: docId
     })
@@ -85,27 +102,135 @@ const displayDoc = (docId) => {
             }
         }
 
-        const card = createNote(title, text);
+        const card = createNote(noteId, docId, title, text);
         document.querySelector("#container").innerHTML += card;
     });
 }
 
 const displayAllDocs = () => {
+    let count = 0;
+    document.querySelector("#container").innerHTML = "";
+
     const notesRef = firebase.database().ref(`users/${googleUserId}`);
     notesRef.on('value', (snapshot) => {
         const data = snapshot.val();
-        for (const noteId in data) {
-            const docId = data[noteId].documentId;
-            displayDoc(docId);
+        if (count < Object.keys(data).length) {            
+            for (const noteId in data) {
+                const docId = data[noteId].documentId;
+                displayDoc(noteId, docId);
+                count++;
+            }
         }
     });
 }
 
-const handleNoteSubmit = () => {
-    const noteTitle = document.querySelector('#noteTitle');
-    const noteText = document.querySelector('#noteText');
+const editDoc = (noteId, docId) => {
+    gapi.client.docs.documents.get({
+        documentId: docId
+    })
+    .then((response) => {
+        const doc = response.result;
+        const title = doc.title;
+        const content = doc.body.content;
+        
+        let text = "";
+        for (const contentObject of content) {
+            if ("paragraph" in contentObject) {
+                const elements = contentObject.paragraph.elements;
+                for (const element of elements) {
+                    if ("textRun" in element) {
+                        text += element.textRun.content;
+                    }
+                }
+            }
+        }
 
-    createDoc(noteTitle.value, noteText.value);
-    noteTitle.value = "";
-    noteText.value = "";
+        editedNoteId = noteId;
+        editedDocId = docId;
+        // document.querySelector("#editTitleInput").value = title;
+        document.querySelector("#editContentInput").value = text;
+        document.querySelector("#editNoteModal").classList.add('is-active');        
+    });
+}
+
+const closeEditModal = () => {
+    document.querySelector("#editNoteModal").classList.toggle('is-active');
+}
+
+const saveEditedNote = () => {
+    // const newTitle = document.querySelector("#editTitleInput").value;
+    const newContent = document.querySelector("#editContentInput").value;
+
+    gapi.client.docs.documents.batchUpdate({
+        documentId: editedDocId,
+        requests: [{
+            insertText: {
+                text: newContent,
+                location: {
+                    index: 1,
+                },
+            },
+        }],
+    })
+    .then((response) => {
+        console.log(response.result);
+        firebase.database().ref(`users/${googleUserId}/${editedNoteId}`)
+        .update({
+            documentId: editedDocId,
+            timestamp: Date.now()
+        });        
+    });
+    
+    displayAllDocs();
+    closeEditModal();
+}
+
+const displayRecentlyEdited = (docId, timestamp) => {
+    const container = document.querySelector("#recent");
+    container.innerHTML = "";
+
+    gapi.client.docs.documents.get({
+        documentId: docId
+    })
+    .then((response) => {
+        const doc = response.result;
+        const title = doc.title;
+        const date = new Date(timestamp);
+        const card = 
+        `
+        <div class="column is-half">
+            <div class="box my-2 pr-3 pl-3">
+                <h2 class="has-text-weight-semibold"><a href="https://docs.google.com/document/d/${docId}/edit">${title}</a></h2>
+                <p>${date.toUTCString()}</p>
+            </div>       
+        </div>
+        `
+
+        container.innerHTML += card;
+    });
+}
+
+const findRecentlyEdited = () => {
+    let itemList = [];
+
+    const notesRef = firebase.database().ref(`users/${googleUserId}`);
+    notesRef.on('value', (snapshot) => {
+        const data = snapshot.val();          
+        for (const noteId in data) {
+            itemList.push(data[noteId]);
+        }
+
+        itemList.sort((x, y) => {
+            return y.timestamp - x.timestamp;
+        });
+
+        for (let i = 0; i < 4; i++) {
+            displayRecentlyEdited(itemList[i].documentId, itemList[i].timestamp);
+        }
+    });
+}
+
+const initialSetup = () => {
+    findRecentlyEdited();
+    displayAllDocs();
 }
