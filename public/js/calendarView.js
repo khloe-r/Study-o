@@ -33,7 +33,7 @@ function handleClientLoad() {
         'Friday',
         'Saturday'
     ];
-    getData();
+    
     //genCal(currentYear, currentMonth);
 }
 
@@ -81,6 +81,7 @@ function handleAuthResult(authResult) {
     // resultPanel.className += ' panel-danger';				// make panel red
     // authorizeButton.onclick = handleAuthClick;				// setup function to handle button click
     //}
+    getData();
 }
 
 
