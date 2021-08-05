@@ -153,40 +153,41 @@ function makeApiCall() {
 }
 
 
-function getCalendarEvents(year, month, td, numb) {
+// function getCalendarEvents(year, month, td, numb) {
 
-    gapi.client.load('calendar', 'v3', () => {
-        gapi.client.calendar.events.list({
-            "calendarId": "primary",
-            "q": "Study-O Homework Tracker"
-        })
-            .then(function (response) {
-                let events = response.result.items;
-                if (events.length > 0) {
-                    for (i = 0; i < events.length; i++) {
-                        var event = events[i];
-                        let day = event.start.dateTime;
-                        let yr = parseInt(day.slice(0, 4));
-                        let mon = parseInt(day.slice(5, 7) - 1);
-                        let num = parseInt(day.slice(8, 10));
-                        if (mon === month && yr === year && num == numb) {
+//     gapi.client.load('calendar', 'v3', () => {
+//         gapi.client.calendar.events.list({
+//             "calendarId": "primary",
+//             "q": "Study-O Homework Tracker"
+//         })
+//             .then(function (response) {
+//                 let events = response.result.items;
+//                 if (events.length > 0) {
+//                     for (i = 0; i < events.length; i++) {
+//                         var event = events[i];
+//                         let day = event.start.dateTime;
+//                         let yr = parseInt(day.slice(0, 4));
+//                         let mon = parseInt(day.slice(5, 7) - 1);
+//                         let num = parseInt(day.slice(8, 10));
+//                         if (mon === month && yr === year && num == numb) {
 
-                            td.name = "test";
-                            td.innerHTML += `<p>${numb}</p> <p>${event.summary}</p>`;
-                            console.log(td);
-                            // console.log('true');
-                        }
-                        else {
-                            td.innerHTML = `${numb}`;
-                        }
+//                             td.name = "test";
+//                             td.innerHTML += `<p>${numb}</p> 
+//                                                 <p>${event.summary}</p>`;
+//                             console.log(td);
+//                             // console.log('true');
+//                         }
+//                         else {
+//                             td.innerHTML = `${numb}`;
+//                         }
 
-                    }
-                }
-            },
-                function (err) { console.error("Execute error", err); });
+//                     }
+//                 }
+//             },
+//                 function (err) { console.error("Execute error", err); });
 
-    });
-}
+//     });
+// }
 
 function genCal(year, month) {
     let startOfMonth = new Date(year, month).getDay();
