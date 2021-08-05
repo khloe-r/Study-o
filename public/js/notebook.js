@@ -6,7 +6,7 @@ window.onload = () => {
         if (user) {            
             googleUserId = user.uid;
             console.log(`Google User ID: ${googleUserId}`);
-            displayAllDocs();
+            initialSetup();            
         } else {
             // If not logged in redirect to log in page
             window.location = 'index.html';
@@ -183,4 +183,54 @@ const saveEditedNote = () => {
     
     displayAllDocs();
     closeEditModal();
+}
+
+const displayRecentlyEdited = (docId, timestamp) => {
+    const container = document.querySelector("#recent");
+    container.innerHTML = "";
+
+    gapi.client.docs.documents.get({
+        documentId: docId
+    })
+    .then((response) => {
+        const doc = response.result;
+        const title = doc.title;
+        const date = new Date(timestamp);
+        const card = 
+        `
+        <div class="column is-half">
+            <div class="box my-2 pr-3 pl-3">
+                <h2 class="has-text-weight-semibold"><a href="https://docs.google.com/document/d/${docId}/edit">${title}</a></h2>
+                <p>${date.toUTCString()}</p>
+            </div>       
+        </div>
+        `
+
+        container.innerHTML += card;
+    });
+}
+
+const findRecentlyEdited = () => {
+    let itemList = [];
+
+    const notesRef = firebase.database().ref(`users/${googleUserId}`);
+    notesRef.on('value', (snapshot) => {
+        const data = snapshot.val();          
+        for (const noteId in data) {
+            itemList.push(data[noteId]);
+        }
+
+        itemList.sort((x, y) => {
+            return y.timestamp - x.timestamp;
+        });
+
+        for (let i = 0; i < 4; i++) {
+            displayRecentlyEdited(itemList[i].documentId, itemList[i].timestamp);
+        }
+    });
+}
+
+const initialSetup = () => {
+    findRecentlyEdited();
+    displayAllDocs();
 }
