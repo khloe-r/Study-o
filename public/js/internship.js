@@ -1,9 +1,10 @@
 // Cloud Storage
-console.log("script run")
+console.log("script run") 
 
 const fileInput = document.querySelector('#fileUpload')
 const fileName = document.querySelector('#fileUploadName');
 const fileList = document.querySelector('#fileList')
+
 fileInput.onchange = () => { 
     if (fileInput.files.length > 0) {
     fileName.textContent = fileInput.files[0].name;
@@ -30,6 +31,25 @@ const submitFile = () => {
     
 }
 
+const deleteFile = (parent, child) => {
+    console.log("deleting file")
+    let userID = ''
+    firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+            userID = user.uid;
+            var storageRef = firebase.storage().ref()
+            var imageRef = storageRef.child(`${userID}/${parent}/${child}`);
+
+            // Delete the file
+            imageRef.delete().then(() => {
+                listFiles()
+            }).catch((error) => {
+                console.log('OOps')
+            });
+        }
+    })
+}
+
 const listFiles = () => {
     let userID = ''
     fileList.innerHTML = ''
@@ -52,7 +72,18 @@ const listFiles = () => {
                             if (index === 0) {
                                 fileList.innerHTML += `<h1 class="title mt-4">${itemRef.parent.name}</h1>`
                             }
-                            fileList.innerHTML += `<p class="subtitle is-clickable" onclick="downloadFile('${itemRef.parent.name}', '${itemRef.name}')">${itemRef.name}</p>`
+                            fileList.innerHTML += `<div class="box">
+                                                    <div class="columns">
+                                                    <div class="column is-11">
+                                                    <p class="subtitle is-clickable" onclick="downloadFile('${itemRef.parent.name}', '${itemRef.name}')">           
+                                                     ${itemRef.name}
+                                                    </p>
+                                                    </div>
+                                                    <div class="column">
+                                                    <button class="delete column" onclick="deleteFile('${itemRef.parent.name}', '${itemRef.name}')"></button>
+                                                    </div>
+                                                    </div>
+                                                    </div>`
 
                         })
                     })
@@ -94,3 +125,4 @@ const downloadFile = (parent, child) => {
         }
     })
 }
+
