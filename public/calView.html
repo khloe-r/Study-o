@@ -12,7 +12,7 @@
     <script defer src="/__/firebase/8.3.1/firebase-database.js"></script>
     <script defer src="/__/firebase/init.js?useEmulator=true"></script>
     <script src="js/calendarView.js"></script>
-
+    <script src="js/logout.js"></script>
 
 </head>
 
@@ -24,7 +24,7 @@
                 <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28">
             </a>
 
-            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false"
+            <a role="button" class="navbar-burger" href="dropdown.html" aria-label="menu" aria-expanded="false"
                 data-target="navbarBasicExample">
                 <span aria-hidden="true"></span>
                 <span aria-hidden="true"></span>
@@ -62,6 +62,13 @@
             </div>
         </div>
     </nav>
+    <section class="hero is-small has-text-centered">
+        <div class="hero-body">
+            <p class="is-size-2 has-text-weight-semibold">
+            Homework Tracker
+            </p>
+        </div>
+    </section>
     <div class="row">
         <div class="col-md-2 col-sm-2 col-xs-12">
         </div><!-- .col -->
@@ -150,7 +157,13 @@
         </table>
 
     </div>
-
+<footer class="footer">
+        <div class="content has-text-centered">
+            <p>
+            <strong>Study-O</strong> by Sia Bhatia, Aryan Chinnala and Khloe Ramdhan. © <a href="https://github.com/khloe-r/Study-o">Study-O</a> 2021
+            </p>
+        </div>
+    </footer>
 
 </body>
 
