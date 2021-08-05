@@ -99,6 +99,22 @@
         <section id="container" class="columns is-multiline">
         </section>
 
+        <div id="editNoteModal" class="modal">
+            <div class="modal-background"></div>
+            <div class="modal-card">
+                <section class="modal-card-body">
+                    <!-- <p class="is-subtitle">Note Title</p>
+                    <input class="input is-normal" id="editTitleInput" type="text"> -->
+                    <p class="is-subtitle">Note Content</p>
+                    <textarea class="textarea is-medium" id="editContentInput"></textarea>
+                </section>
+                <footer class="modal-card-foot">
+                    <button class="button is-success" onclick="saveEditedNote()">Save changes</button>
+                    <button class="button is-danger" onclick="closeEditModal()">Cancel</button>
+                </footer>
+            </div>
+        </div>
+
         <script type="text/javascript">
             // Client ID and API key from the Developer Console
             var CLIENT_ID = '243003109957-8bpj74e6eib10r888ccleeh1t0lhqp8g.apps.googleusercontent.com';

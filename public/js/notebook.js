@@ -1,4 +1,4 @@
-let googleUserId;
+let googleUserId, editedDocId;
 
 window.onload = () => {
 // When page loads, check user logged in state
@@ -14,7 +14,7 @@ window.onload = () => {
     }); 
 }
 
-const createNote = (title, text) => {
+const createNote = (docId, title, text) => {
     const card = 
     `
     <div class="column is-one-third">
@@ -25,7 +25,13 @@ const createNote = (title, text) => {
             <div class="card-content">
                 <div class="content">${text}</div>
             </div>
-        </div>
+            <footer class="card-footer">
+                <a href="#" class="button is-light"
+                    onclick="editDoc('${docId}')">
+                    Edit
+                </a>
+            </footer>
+        </div>        
     </div>
     `
     return card;
@@ -64,6 +70,15 @@ const createDoc = (title, text) => {
     });  
 }
 
+const addNote = () => {
+    const noteTitle = document.querySelector('#noteTitle');
+    const noteText = document.querySelector('#noteText');
+
+    createDoc(noteTitle.value, noteText.value);
+    noteTitle.value = "";
+    noteText.value = "";
+}
+
 const displayDoc = (docId) => {
     gapi.client.docs.documents.get({
         documentId: docId
@@ -85,7 +100,7 @@ const displayDoc = (docId) => {
             }
         }
 
-        const card = createNote(title, text);
+        const card = createNote(docId, title, text);
         document.querySelector("#container").innerHTML += card;
     });
 }
@@ -102,11 +117,57 @@ const displayAllDocs = () => {
     });
 }
 
-const addNote = () => {
-    const noteTitle = document.querySelector('#noteTitle');
-    const noteText = document.querySelector('#noteText');
+const editDoc = (docId) => {
+    gapi.client.docs.documents.get({
+        documentId: docId
+    })
+    .then((response) => {
+        const doc = response.result;
+        const title = doc.title;
+        const content = doc.body.content;
+        
+        let text = "";
+        for (const contentObject of content) {
+            if ("paragraph" in contentObject) {
+                const elements = contentObject.paragraph.elements;
+                for (const element of elements) {
+                    if ("textRun" in element) {
+                        text += element.textRun.content;
+                    }
+                }
+            }
+        }
 
-    createDoc(noteTitle.value, noteText.value);
-    noteTitle.value = "";
-    noteText.value = "";
+        editedDocId = docId;
+        // document.querySelector("#editTitleInput").value = title;
+        document.querySelector("#editContentInput").value = text;
+        document.querySelector("#editNoteModal").classList.add('is-active');        
+    });
+}
+
+const closeEditModal = () => {
+    document.querySelector("#editNoteModal").classList.toggle('is-active');
+}
+
+const saveEditedNote = () => {
+    // const newTitle = document.querySelector("#editTitleInput").value;
+    const newContent = document.querySelector("#editContentInput").value;
+
+    gapi.client.docs.documents.batchUpdate({
+        documentId: editedDocId,
+        requests: [{
+            insertText: {
+                text: newContent,
+                location: {
+                    index: 1,
+                },
+            },
+        }],
+    })
+    .then((response) => {
+        console.log(response.result);
+        displayAllDocs();
+    });
+    
+    closeEditModal();
 }
