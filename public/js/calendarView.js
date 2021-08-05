@@ -223,7 +223,7 @@ function genCal(year, month) {
 
                 if (curEvents != null && curEvents.length != 0) {
                     Object.values(curEvents).forEach((e) => {
-                        td.innerHTML += `<p>${e.summary} - Due at: ${e.start.dateTime.slice(12, 16)}</p>`;
+                        td.innerHTML += `<p>${e.summary} - Due at: ${e.start.dateTime.slice(11, 16)}</p>`;
                     });
                 }
 
