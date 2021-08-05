@@ -206,27 +206,43 @@ const calculatePercentChange = (oldContent, newContent) => {
 const saveEditedNote = () => {
     // const newTitle = document.querySelector("#editTitleInput").value;
     const newContent = document.querySelector("#editContentInput").value;
+    console.log("Old Content: ");
+    console.log(oldContent);
+    console.log(oldContent.length);
 
     gapi.client.docs.documents.batchUpdate({
         documentId: editedDocId,
         requests: [{
-            insertText: {
-                text: newContent,
-                location: {
-                    index: 1,
-                },
-            },
+            deleteContentRange: {
+                range: {
+                    startIndex: 1,
+                    endIndex: oldContent.length,
+                }
+            },            
         }],
     })
-    .then((response) => {
-        console.log(response.result);
-        firebase.database().ref(`users/${googleUserId}/${editedNoteId}`)
-        .update({
+    .then((_) => {
+        gapi.client.docs.documents.batchUpdate({
             documentId: editedDocId,
-            timestamp: Date.now(),
-            textContent: newContent,
-            percentChange: Math.round(calculatePercentChange(oldContent, newContent)*10000)/100
-        });        
+            requests: [{
+                insertText: {
+                    text: newContent,
+                    location: {
+                        index: 1,
+                    },
+                },    
+            }],
+        })
+        .then((response) => {
+            console.log(response.result);
+            firebase.database().ref(`users/${googleUserId}/${editedNoteId}`)
+            .update({
+                documentId: editedDocId,
+                timestamp: Date.now(),
+                textContent: newContent,
+                percentChange: Math.round(calculatePercentChange(oldContent, newContent)*10000)/100
+            });
+        })                
     });
     
     displayAllDocs();
