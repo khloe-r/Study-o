@@ -1,4 +1,3 @@
-
 const signIn = () => {
     console.log("Calling sign in")
     const provider = new firebase.auth.GoogleAuthProvider();

@@ -6,8 +6,7 @@
   <title>Study-o</title>
   <link rel="stylesheet" href="css/style.css" type="text/css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
-  <!-- update the version number as needed -->
-    <script defer src="/__/firebase/8.3.1/firebase-app.js"></script>
+  <script defer src="/__/firebase/8.3.1/firebase-app.js"></script>
     <!-- include only the Firebase features as you need -->
     <script defer src="/__/firebase/8.3.1/firebase-auth.js"></script>
     <script defer src="/__/firebase/8.3.1/firebase-database.js"></script>
@@ -17,8 +16,7 @@
 </head>
 
 <body>
-        <!-- Navbar -->
-        <nav class="navbar" role="navigation" aria-label="main navigation">
+    <nav class="navbar" role="navigation" aria-label="main navigation">
             <div class="navbar-brand">
                 <a class="navbar-item" href="dashboard.html">
                 <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28">
@@ -61,40 +59,30 @@
                 </div>
             </div>
         </nav>
-        <!-- Main Hero -->
-        <section class="is-primary is-small has-text-centered">
-            <div class="hero-body" id="main-div">
-                <p class="title" id="welcomeTitle">
-                Welcome!
-                </p>
-                <p class="subtitle">
-                Visit the navbar above for more!
-                </p>
-            </div>
-            <p class="title">
-               Most Urgent Tasks
-            </p>
-            <div id="urgent-tasks">
 
-            </div>
-        </section>
-    <button id="authorize_button" style="display: none;">Authorize</button>
-    <button id="signout_button" style="display: none;">Sign Out</button>    
-    <pre id="listView" style="white-space: pre-wrap;" class="is-family-sans-serif has-text-centered columns is-multiline">
-    </pre>
-    <footer class="footer">
-        <div class="content has-text-centered">
-            <p>
-            <strong>Study-O</strong> by Sia Bhatia, Aryan Chinnala and Khloe Ramdhan. © <a href="https://github.com/khloe-r/Study-o">Study-O</a> 2021
+        <aside class="menu ml-5 mt-3">
+            <p class="menu-label">
+                General
             </p>
-        </div>
-    </footer>
-
-    <script async defer src="https://apis.google.com/js/api.js"
-      onload="this.onload=function(){};handleClientLoad()"
-      onreadystatechange="if (this.readyState === 'complete') this.onload()">
-    </script>
-    <script src="js/dashboard.js"></script>
+            <ul class="menu-list">
+                <li><a href="dashboard.html">Home</a></li>
+            </ul>
+            <p class="menu-label">
+                Study Tools
+            </p>
+            <ul class="menu-list">
+                <li><a href="homework.html">Homework Tracker</a></li>
+                <li><a href="internship.html">Internship Tracker</a></li>
+                <li><a href="pomodoro.html">Pomodoro Timer</a></li>
+                <li><a href="notebooks.html">Notebooks</a></li>
+            </ul>
+            <p class="menu-label">
+                Settings
+            </p>
+            <ul class="menu-list">
+                <li><a onclick="logout()">Logout</a></li>
+            </ul>
+            </aside>
 
 </body>
 

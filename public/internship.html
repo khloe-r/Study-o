@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
 
-<head>
+<head> 
     <meta charset="UTF-8">
     <title>Study-o</title>
-    <link rel="stylesheet" href="style.css" type="text/css">
+    <link rel="stylesheet" href="css/style.css" type="text/css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
     <!-- update the version number as needed -->
     <script defer src="/__/firebase/8.3.1/firebase-app.js"></script>
@@ -137,8 +137,10 @@
                 <div class="column">
                     <h5 class="title">View Files</h5>
                     <p class="subtitle">Click on a file below then click download!</p>
-                    <p id="fileSelected">Selected File: None</p>
-                    <a id="myDownload" download>Download Here</a>
+                    <div class="box">
+                        <p id="fileSelected">Selected File: None</p>
+                        <a id="myDownload" download>Download Here</a>
+                    </div>
                     <div id="fileList"></div>
                 </div>
                 <div class="column">
@@ -171,6 +173,34 @@
             </div>
         </div>
     </section>
+
+    <div class="modal" id="statusModal">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+            <div class="card">
+                <header class="card-header">
+                    <h1 class="card-header-title">Update status of</h1>
+                </header>
+                <div class="card-content">
+                    <div class="content">
+                        <p>Select the new status and click save</p>
+                        <div class="select mt-2">
+                            <select id="newStatusInput">
+                                <option>Have to Apply</option>
+                                <option>Applied & Waiting</option>
+                                <option>Interview Stage</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <footer class="card-footer">
+                    <a class="card-footer-item" onclick="updateApp('idnum')" id="saveChangesBtn">Save Changes</a>
+                </footer>
+            </div>
+        </div>
+        <button class="modal-close is-large" aria-label="close" onclick="toggleModal()"></button>
+    </div>
+
     <script async defer src="https://apis.google.com/js/api.js"
       onload="this.onload=function(){};handleClientLoad()"
       onreadystatechange="if (this.readyState === 'complete') this.onload()">
