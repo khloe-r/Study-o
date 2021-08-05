@@ -1,4 +1,4 @@
-let googleUserId, editedNoteId, editedDocId;
+let googleUserId, editedNoteId, editedDocId, oldContent;
 
 window.onload = () => {
 // When page loads, check user logged in state
@@ -48,7 +48,9 @@ const createDoc = (title, text) => {
 
         firebase.database().ref(`users/${googleUserId}`).push({
             documentId: docId,
-            timestamp: time
+            timestamp: time,
+            textContent: text,
+            percentChange: 100
         })
         .then(() => {
             console.log("Pushed to database");
@@ -147,6 +149,7 @@ const editDoc = (noteId, docId) => {
 
         editedNoteId = noteId;
         editedDocId = docId;
+        oldContent = text;
         // document.querySelector("#editTitleInput").value = title;
         document.querySelector("#editContentInput").value = text;
         document.querySelector("#editNoteModal").classList.add('is-active');        
@@ -155,6 +158,49 @@ const editDoc = (noteId, docId) => {
 
 const closeEditModal = () => {
     document.querySelector("#editNoteModal").classList.toggle('is-active');
+}
+
+function editDistance(longer, shorter) {
+    longer = longer.toLowerCase();
+    shorter = shorter.toLowerCase();
+
+    let costs = new Array(shorter.length + 1);
+    for (let i = 0; i <= longer.length; i++) {
+        let lastValue = i;
+        for (let j = 0; j <= shorter.length; j++) {
+            if (i == 0)
+                costs[j] = j;
+            else {
+                if (j > 0) {
+                    let newValue = costs[j - 1];
+                    if (longer.charAt(i - 1) != shorter.charAt(j - 1))
+                        newValue = Math.min(Math.min(newValue, lastValue),
+                            costs[j]) + 1;
+                    costs[j - 1] = lastValue;
+                    lastValue = newValue;
+                }
+            }
+        }
+        if (i > 0)
+            costs[shorter.length] = lastValue;
+    }
+    return costs[shorter.length];
+}
+
+const calculatePercentChange = (oldContent, newContent) => {
+    let longer = oldContent;
+    let shorter = newContent;
+    if (oldContent.length < newContent.length) {
+        longer = newContent;
+        shorter = oldContent;
+    }
+
+    let longerLength = longer.length;
+    if (longerLength === 0) {
+        return 1.0;
+    }
+
+    return 1.0 - ((longerLength - editDistance(longer, shorter)) / parseFloat(longerLength));
 }
 
 const saveEditedNote = () => {
@@ -177,7 +223,9 @@ const saveEditedNote = () => {
         firebase.database().ref(`users/${googleUserId}/${editedNoteId}`)
         .update({
             documentId: editedDocId,
-            timestamp: Date.now()
+            timestamp: Date.now(),
+            textContent: newContent,
+            percentChange: Math.round(calculatePercentChange(oldContent, newContent)*10000)/100
         });        
     });
     
@@ -185,7 +233,7 @@ const saveEditedNote = () => {
     closeEditModal();
 }
 
-const displayRecentlyEdited = (docId, timestamp) => {
+const displayRecentlyEdited = (docId, timestamp, percentChange) => {
     const container = document.querySelector("#recent");
     container.innerHTML = "";
 
@@ -202,6 +250,7 @@ const displayRecentlyEdited = (docId, timestamp) => {
             <div class="box my-2 pr-3 pl-3">
                 <h2 class="has-text-weight-semibold"><a href="https://docs.google.com/document/d/${docId}/edit">${title}</a></h2>
                 <p>${date.toUTCString()}</p>
+                <p>Percent Change: ${percentChange}</p>
             </div>       
         </div>
         `
@@ -225,7 +274,7 @@ const findRecentlyEdited = () => {
         });
 
         for (let i = 0; i < 4; i++) {
-            displayRecentlyEdited(itemList[i].documentId, itemList[i].timestamp);
+            displayRecentlyEdited(itemList[i].documentId, itemList[i].timestamp, itemList[i].percentChange);
         }
     });
 }
