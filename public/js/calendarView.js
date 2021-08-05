@@ -24,15 +24,15 @@ let eventLookup = {};
 function handleClientLoad() {
     gapi.client.setApiKey(apiKey);
     window.setTimeout(checkAuth, 1);
-    var weekdays = [
-        'Sunday',
-        'Monday',
-        'Tuesday',
-        'Wednesday',
-        'Thursday',
-        'Friday',
-        'Saturday'
-    ];
+    // var weekdays = [
+    //     'Sunday',
+    //     'Monday',
+    //     'Tuesday',
+    //     'Wednesday',
+    //     'Thursday',
+    //     'Friday',
+    //     'Saturday'
+    // ];
     
     //genCal(currentYear, currentMonth);
 }
@@ -91,19 +91,6 @@ function handleAuthClick(event) {
     return false;
 }
 
-// setup event details
-
-// var resource = {
-
-//     "summary": "Sample Event " + Math.floor((Math.random() * 10) + 1),
-//     "start": {
-//         "dateTime": today
-//     },
-//     "end": {
-//         "dateTime": twoHoursLater
-//     },
-//     "description": "test"
-// };
 
 // function load the calendar api and make the api call
 function makeApiCall() {
@@ -126,7 +113,6 @@ function makeApiCall() {
                     "location": "Study-O Homework Tracker"
                 }
             });
-            // getCalendarEvents();
 
 
 
@@ -144,11 +130,11 @@ function makeApiCall() {
                 if (resp.status == 'confirmed') {
                     //document.getElementById('event-response').innerHTML = "Event created successfully. View it <a href='" + resp.htmlLink + "'>online here</a>.";
                     console.log("successfully submitted!");
-                    alert("it submitted!");
-                    // location.reload();
+                   // alert("it submitted!");
+                    location.reload();
                 } else {
                     console.log(errr);
-                    console.log("did not work");
+                    console.log("did not work, try refreshing your page");
                     //document.getElementById('event-response').innerHTML = "There was a problem. Reload page and try again.";
                     // calendarList.get('primary')
                 }
