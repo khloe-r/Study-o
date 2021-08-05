@@ -228,7 +228,7 @@ function addApplication() {
                     description.value = ""
                     pre.innerHTML = ""
                     listUpcomingEvents()
-                    alert("it submitted!");
+                    //alert("it submitted!");
                 } else {
                     console.log(errr);
                     //document.getElementById('event-response').innerHTML = "There was a problem. Reload page and try again.";
