@@ -3,8 +3,8 @@ console.log("script running");
 var now = new Date();
 var currentMonth = now.getMonth();
 var currentYear = now.getFullYear();
-var monthRn;
-var yearRn; 
+var monthRn = now.getMonth();
+var yearRn = now.getFullYear();
 let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 var twoHoursLater = new Date(now.getTime() + (2 * 1000 * 60 * 60));
@@ -16,6 +16,8 @@ var apiKey = 'AIzaSyDEL7uevoZ_rQ3JLHWDTqHGKrWvTRG-tKY';
 
 // enter the scope of current project (this API must be turned on in the google console)
 var scopes = 'https://www.googleapis.com/auth/calendar';
+
+let eventLookup = {};
 
 
 // Oauth2 functions
@@ -31,13 +33,36 @@ function handleClientLoad() {
         'Friday',
         'Saturday'
     ];
-
-    console.log(weekdays[new Date().getDay()]);
-    genCal(currentYear, currentMonth);
+    getData();
+    //genCal(currentYear, currentMonth);
 }
 
 function checkAuth() {
     gapi.auth.authorize({ client_id: clientId, scope: scopes, immediate: true }, handleAuthResult);
+}
+
+function getData() {
+    gapi.client.load('calendar', 'v3', () => {
+        gapi.client.calendar.events.list({
+            "calendarId": "primary",
+            "q": "Study-O Homework Tracker"
+        }).then((response) => {
+            let tempEvents = response.result.items;
+            Object.values(tempEvents).forEach((e) => {
+                const startTime = e.start.dateTime;
+                let yr = parseInt(startTime.slice(0, 4));
+                let mon = parseInt(startTime.slice(5, 7) - 1);
+                let num = parseInt(startTime.slice(8, 10));
+                const dateKey = yr + '-' + mon + '-' + num;
+                if (eventLookup[dateKey] == null) {
+                    eventLookup[dateKey] = [];
+                }
+                eventLookup[dateKey].push(e);
+            });
+            genCal(currentYear, currentMonth);
+        });
+
+    });
 }
 
 // show/hide the 'authorize' button, depending on application state
@@ -81,7 +106,7 @@ function handleAuthClick(event) {
 
 // function load the calendar api and make the api call
 function makeApiCall() {
-    
+
     if (document.querySelector("#dueDateInput").value.length !== 0 && document.querySelector("#titleInput").value.length !== 0 && document.querySelector("#dueTimeInput").value.length !== 0) {
         let testing = new Date(`${document.querySelector("#dueDateInput").value}T${document.querySelector("#dueTimeInput").value}:00`);
         gapi.client.load('calendar', 'v3', function () {
@@ -100,7 +125,8 @@ function makeApiCall() {
                     "location": "Study-O Homework Tracker"
                 }
             });
-            getCalendarEvents();
+            // getCalendarEvents();
+
 
 
             gapi.client.calendar.events.list({
@@ -118,7 +144,7 @@ function makeApiCall() {
                     //document.getElementById('event-response').innerHTML = "Event created successfully. View it <a href='" + resp.htmlLink + "'>online here</a>.";
                     console.log("successfully submitted!");
                     alert("it submitted!");
-                   // location.reload();
+                    // location.reload();
                 } else {
                     console.log(errr);
                     console.log("did not work");
@@ -138,6 +164,43 @@ function makeApiCall() {
     }
 
 }
+
+
+function getCalendarEvents(year, month, td, numb) {
+
+    gapi.client.load('calendar', 'v3', () => {
+        gapi.client.calendar.events.list({
+            "calendarId": "primary",
+            "q": "Study-O Homework Tracker"
+        })
+            .then(function (response) {
+                let events = response.result.items;
+                if (events.length > 0) {
+                    for (i = 0; i < events.length; i++) {
+                        var event = events[i];
+                        let day = event.start.dateTime;
+                        let yr = parseInt(day.slice(0, 4));
+                        let mon = parseInt(day.slice(5, 7) - 1);
+                        let num = parseInt(day.slice(8, 10));
+                        if (mon === month && yr === year && num == numb) {
+
+                            td.name = "test";
+                            td.innerHTML += `<p>${numb}</p> <p>${event.summary}</p>`;
+                            console.log(td);
+                            // console.log('true');
+                        }
+                        else {
+                            td.innerHTML = `${numb}`;
+                        }
+
+                    }
+                }
+            },
+                function (err) { console.error("Execute error", err); });
+
+    });
+}
+
 function genCal(year, month) {
     let startOfMonth = new Date(year, month).getDay();
     let numOfDays = 32 - new Date(year, month, 32).getDate();
@@ -165,7 +228,18 @@ function genCal(year, month) {
             }
             else {
                 let td = document.createElement('td');
-                td.textContent = `${renderNum}`;
+                // td.textContent = `${renderNum}`;
+                //td.innerHTML = `<p>${renderNum}</p><p>test</p>`
+                const dateString = `${yearRn}-${monthRn}-${renderNum}`;
+                let curEvents = eventLookup[dateString];
+                td.innerHTML = `<p>${renderNum}</p>`;
+
+                if (curEvents != null && curEvents.length != 0) {
+                    Object.values(curEvents).forEach((e) => {
+                        td.innerHTML += `<p>${e.summary}</p>`;
+                    });
+                }
+
                 row.append(td);
                 renderNum++;
 
@@ -173,46 +247,46 @@ function genCal(year, month) {
         }
         tableBody.append(row);
     }
-    
+
 
 
 }
-function moveRight(year, month){
+function moveRight(year, month) {
     tableBody.innerHTML = '';
-    if(monthRn === 11){
-        yearRn+=1;
+    if (monthRn === 11) {
+        yearRn += 1;
         year = yearRn;
         monthRn = 0;
         month = monthRn;
-        genCal(year,month);
-        console.log(yearRn,monthRn);
+        genCal(year, month);
+        console.log(yearRn, monthRn);
     }
-    else{
-        monthRn +=1;
+    else {
+        monthRn += 1;
         month = monthRn;
         year = yearRn;
         genCal(year, month);
-        console.log(yearRn,monthRn);
+        console.log(yearRn, monthRn);
 
     }
 }
-function moveLeft(year, month){
+function moveLeft(year, month) {
     tableBody.innerHTML = '';
-    if(monthRn === 0){
-        yearRn-=1;
+    if (monthRn === 0) {
+        yearRn -= 1;
         year = yearRn;
         monthRn = 11;
         month = monthRn;
-        genCal(year,month);
-        console.log(yearRn,monthRn);
+        genCal(year, month);
+        console.log(yearRn, monthRn);
 
     }
-    else{
-        monthRn -=1;
+    else {
+        monthRn -= 1;
         month = monthRn;
         year = yearRn;
         genCal(year, month);
-        console.log(yearRn,monthRn);
+        console.log(yearRn, monthRn);
 
     }
 }
@@ -220,30 +294,13 @@ function moveLeft(year, month){
 // let buttonSubmit = document.querySelector("#submitButton");
 // buttonSubmit.addEventListener("click", function() {
 //   makeApiCall();
-// });
+// // });
+// var events;
 
-function getCalendarEvents(year, month){
-    return gapi.client.calendar.events.list({
-      "calendarId": "primary",
-      "q": "Study-O Homework Tracker",
-    })
-    .then(function(response){
-       // console.log("Response", response);
-        var events = response.result.items;
-          if (events.length > 0) {
-            for (i = 0; i < events.length; i++) {
-              var event = events[i];
-              let day = event.start.dateTime;
-              let yr = day.slice(0,4);
-              let mon = day.slice(5,7)-1;
-              if(yr===yearRn && mon === monthRn){
-                  
-              }
-              
-            }
-        }
-    },
-    function (err) { console.error("Execute error", err); });
+// function showEventOnCalendar(response) {
+//     let bod = document.querySelector("#tableBody");
 
 
-}
+
+
+// }
