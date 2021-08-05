@@ -2,7 +2,7 @@
 console.log("intern script running");
 // date variables
 var now = new Date();
-today = now.toISOString(); 
+today = now.toISOString();  
 
 var twoHoursLater = new Date(now.getTime() + (2 * 1000 * 60 * 60));
 twoHoursLater = twoHoursLater.toISOString();
@@ -23,16 +23,17 @@ console.log(authorizeButton)
 var scopes = 'https://www.googleapis.com/auth/calendar';
 
 
-function toggleModal(idNum) {
+function toggleModal(idNum, descript) {
     modal.classList.toggle('is-active')
     console.log("modal")
-    document.getElementById('saveChangesBtn').setAttribute('onclick',`updateApp('${idNum}')`)
+    document.getElementById('saveChangesBtn').setAttribute('onclick',`updateApp('${idNum}', '${descript}')`)
 }
 
-function updateApp(idNum) {
+function updateApp(idNum, descript) {
     gapi.client.load('calendar', 'v3', function () {
         const status = document.querySelector('#newStatusInput')
         let tagColour = ''
+        let colorID = 0
         var event = gapi.client.calendar.events.get({
             "calendarId": 'primary',
             "eventId": idNum
@@ -40,18 +41,22 @@ function updateApp(idNum) {
 
         if (status.value === 'Have to Apply') {
             tagColour = 'is-danger'
+            colourID = 4
         } else if (status.value === 'Applied & Waiting') {
             tagColour = 'is-warning'
+            colourID = 5
         } else {
             tagColour = 'is-success'
+            colourID = 2
         }
-        console.log(event)
-        const desc = (event.description).split(' <br/> ')
+        // console.log(event)
+        // const desc = (event.description).split(' <br/> ')
         
-        const newDesc = desc[0] + ' <br/> ' + `<span class="tag ${tagColour}">${status.value}</span>`
+        const newDesc = descript + ' <br/> ' + `<span class="tag ${tagColour}">${status.value}</span>`
         console.log(newDesc)
 
         event.description = newDesc;
+        event.colorId = colourID;
 
 
         var request = gapi.client.calendar.events.patch({
@@ -62,7 +67,10 @@ function updateApp(idNum) {
 
         request.execute(function (event) {
             console.log(event);
+            pre.innerHTML = ""
+            listUpcomingEvents()
         });
+        
     })
     toggleModal()
 }
@@ -250,7 +258,7 @@ function appendPre(message) {
 function updateSigninStatus(isSignedIn) {
         if (isSignedIn) {
           authorizeButton.style.display = 'none';
-          signoutButton.style.display = 'block';
+          signoutButton.style.display = 'none';
           listUpcomingEvents();
         } else {
           authorizeButton.style.display = 'block';
@@ -293,9 +301,17 @@ function listUpcomingEvents() {
                 'November',
                 'December'
             ];
+            // let tagColour = ''
+            // if (status.value === 'Have to Apply') {
+            //     tagColour = 'is-danger'
+            // } else if (status.value === 'Applied & Waiting') {
+            //     tagColour = 'is-warning'
+            // } else {
+            //     tagColour = 'is-success'
+            // }
+
             const desc = (event.description).split(' <br/> ')
-        
-            const newDesc = desc[0] + ' <br/> ' + `<span class="tag ${tagColour}">${status.value}</span>`
+            const newDesc = desc[0] // + ' <br/> ' + `<span class="tag ${tagColour}">${status.value}</span>`
             console.log(newDesc)
 
             let myDate = event.start.dateTime.toString()
@@ -307,7 +323,7 @@ function listUpcomingEvents() {
                         <h2 class="has-text-weight-semibold">${event.summary}</h2>
                         <p>Due on ${theDate} at ${time} ${suffix}</p>
                         <p>${event.description}</p>
-                        <button class="button mt-2" onclick="toggleModal('${event.id}')" id="${event.id}">Update Status</button>
+                        <button class="button mt-2" onclick="toggleModal('${event.id}', '${newDesc}')" id="${event.id}">Update Status</button>
                     </div>`)
         }
         } else {
