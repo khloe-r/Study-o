@@ -69,7 +69,6 @@ const createDoc = (title, text) => {
         })
         .then((response) => {
             console.log(response.result);
-            displayAllDocs();
         });
     });  
 }
@@ -105,7 +104,12 @@ const displayDoc = (noteId, docId) => {
         }
 
         const card = createNote(noteId, docId, title, text);
-        document.querySelector("#container").innerHTML += card;
+        const processedInnerHTML = document.querySelector("#container").innerHTML.replace(/\s+/g, '');
+        const processedCard = card.replace(/\s+/g, '');
+
+        if (!processedInnerHTML.includes(processedCard)) {
+            document.querySelector("#container").innerHTML += card;
+        }
     });
 }
 
@@ -243,10 +247,10 @@ const saveEditedNote = () => {
                 percentChange: Math.round(calculatePercentChange(oldContent, newContent)*10000)/100
             });
         })                
-    });
+    });    
     
-    displayAllDocs();
     closeEditModal();
+    displayAllDocs();
 }
 
 const displayRecentlyEdited = (docId, timestamp, percentChange) => {
@@ -265,8 +269,8 @@ const displayRecentlyEdited = (docId, timestamp, percentChange) => {
         percentChange = Math.floor(percentChange);        
         percentChangeString = `${percentChange}% Change`;              
 
-        if (isNaN(percentChange)) {
-            tagStyle = "is-success";
+        if (percentChange == 100) {
+            tagStyle = "is-info";
             percentChangeString = "Newly Created";
         } else if (percentChange < 33) {
             tagStyle = "is-success";
@@ -299,7 +303,16 @@ const findRecentlyEdited = () => {
         const data = snapshot.val();
         if (data) {                   
             for (const noteId in data) {
-                itemList.push(data[noteId]);
+                let found = false;
+                for (item of itemList) {
+                    if (item.documentId == data[noteId].documentId) {
+                        found = true;
+                        break;
+                    }                    
+                }
+                if (!found) {
+                    itemList.push(data[noteId]);
+                }               
             }
 
             itemList.sort((x, y) => {
