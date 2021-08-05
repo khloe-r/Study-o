@@ -142,15 +142,19 @@ gapi.client.calendar.events.list({
             'November',
             'December'
         ];
-        let myDate = event.start.dateTime.toString()
-        let time = new Date(myDate).toLocaleTimeString('en',{ timeStyle: 'short', hour12: false, timeZone: 'UTC' });
-        const suffix = (parseInt(time.substring(0, 2)) >= 12 ? 'PM' : 'AM')
-        time = (parseInt(time.substring(0, 2)) > 12 ? parseInt(time.substring(0, 2)) - 12 : time.substring(0, 2)) + time.substring(2, 5)
+        console.log(event)
+        let myDate = (event.start.date ? event.start.date : event.start.dateTime)
         const theDate = months[parseInt(myDate.substring(5, 7)) - 1] + ' ' + myDate.substring(8, 10) + ', ' + myDate.substring(0, 4)
-        appendPre(`<div class="box">
-                        <h2 class="has-text-weight-semibold title">${event.summary}</h2>
-                        <p>${theDate} at ${time} ${suffix}</p>
-                        <p>${event.description}</p>
+        let desc = (event.description ? event.description.substring(0, 75) : "")
+        if (event.description) {
+            if (event.description.length > 75) {
+                desc += "..."
+            }
+        }
+        appendPre(`<div class="box" style="height:400px">
+                        <h2 class="has-text-weight-semibold is-size-3">${event.summary}</h2>
+                        <p>Happening on ${theDate}</p>
+                        <p>${desc}</p>
                     </div>`)
     }
     } else {
