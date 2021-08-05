@@ -2,6 +2,7 @@ const signIn = () => {
     console.log("Calling sign in")
     const provider = new firebase.auth.GoogleAuthProvider();
     provider.addScope("https://www.googleapis.com/auth/calendar");
+    provider.addScope("https://www.googleapis.com/auth/documents");
 
 
     firebase.auth()
