@@ -260,13 +260,29 @@ const displayRecentlyEdited = (docId, timestamp, percentChange) => {
         const doc = response.result;
         const title = doc.title;
         const date = new Date(timestamp);
+
+        let tagStyle = "";  
+        percentChange = Math.floor(percentChange);        
+        percentChangeString = `${percentChange}% Change`;              
+
+        if (isNaN(percentChange)) {
+            tagStyle = "is-success";
+            percentChangeString = "Newly Created";
+        } else if (percentChange < 33) {
+            tagStyle = "is-success";
+        } else if (percentChange < 66) {
+            tagStyle = "is-warning";
+        } else {
+            tagStyle = "is-danger";
+        }
+
         const card = 
         `
         <div class="column is-half">
             <div class="box my-2 pr-3 pl-3">
                 <h2 class="has-text-weight-semibold"><a href="https://docs.google.com/document/d/${docId}/edit">${title}</a></h2>
                 <p>${date.toUTCString()}</p>
-                <p>Percent Change: ${percentChange}</p>
+                <span class="tag ${tagStyle}">${percentChangeString}</span>
             </div>       
         </div>
         `
