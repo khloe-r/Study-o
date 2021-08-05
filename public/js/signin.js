@@ -35,7 +35,7 @@ var authorizeButton = document.getElementById('signInBtn');
  *  On load, called to load the auth2 library and API client library.
  */
 function handleClientLoad() {
-gapi.load('client:auth2', initClient);
+    gapi.load('client:auth2', initClient);
 }
 
 function initClient() {
@@ -68,9 +68,9 @@ function updateSigninStatus(isSignedIn) {
     }
     }
 
-    /**
-     *  Sign in the user upon button click.
-     */
-    function handleAuthClick(event) {
+/**
+ *  Sign in the user upon button click.
+ */
+function handleAuthClick(event) {
     gapi.auth2.getAuthInstance().signIn();
 }

@@ -233,11 +233,11 @@ function genCal(year, month) {
                 //td.innerHTML = `<p>${renderNum}</p><p>test</p>`
                 const dateString = `${yearRn}-${monthRn}-${renderNum}`;
                 let curEvents = eventLookup[dateString];
-                td.innerHTML = `<p>${renderNum}</p>`;
+                td.innerHTML = `<p class ="title">${renderNum}</p>`;
 
                 if (curEvents != null && curEvents.length != 0) {
                     Object.values(curEvents).forEach((e) => {
-                        td.innerHTML += `<p>${e.summary}</p>`;
+                        td.innerHTML += `<p>${e.summary} - Due at: ${e.start.dateTime.slice(12, 16)}</p>`;
                     });
                 }
 
