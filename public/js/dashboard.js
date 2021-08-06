@@ -29,7 +29,7 @@ var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/
 
 // Authorization scopes required by the API; multiple scopes can be
 // included, separated by spaces.
-var SCOPES = "https://www.googleapis.com/auth/calendar.readonly";
+var SCOPES = "https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/documents";
 
 var authorizeButton = document.getElementById('authorize_button');
 var signoutButton = document.getElementById('signout_button');
@@ -57,6 +57,8 @@ gapi.client.init({
     updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
     authorizeButton.onclick = handleAuthClick;
     signoutButton.onclick = handleSignoutClick;
+    authorizeButton.style.display = 'none';
+    signoutButton.style.display = 'none';
 }, function(error) {
     appendPre(JSON.stringify(error, null, 2));
 });
@@ -68,12 +70,9 @@ gapi.client.init({
  */
 function updateSigninStatus(isSignedIn) {
 if (isSignedIn) {
-    authorizeButton.style.display = 'none';
-    signoutButton.style.display = 'none';
     listUpcomingEvents();
 } else {
-    authorizeButton.style.display = 'block';
-    signoutButton.style.display = 'none';
+    // gapi.auth2.getAuthInstance().signIn();
 }
 }
 

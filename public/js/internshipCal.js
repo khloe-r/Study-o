@@ -103,11 +103,11 @@ function initClient() {
 function handleClientLoad() {
     gapi.load('client:auth2', initClient);
     // setTimeout(gapi.client.setApiKey(apiKey), 10000);
-    window.setTimeout(checkAuth, 1);
+    // window.setTimeout(checkAuth, 1);
 }
 
 function checkAuth() {
-    gapi.auth.authorize({ client_id: clientId, scope: scopes, immediate: true }, handleAuthResult);
+    gapi.auth2.authorize({ client_id: clientId, scope: scopes, immediate: true }, handleAuthResult);
 }
 
 // show/hide the 'authorize' button, depending on application state
