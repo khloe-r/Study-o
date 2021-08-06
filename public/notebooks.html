@@ -163,6 +163,8 @@
                 updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
                 authorizeButton.onclick = handleAuthClick;
                 signoutButton.onclick = handleSignoutClick;
+                authorizeButton.style.display = 'none';
+                signoutButton.style.display = 'none';
                 });
             }
             
@@ -171,12 +173,8 @@
              *  appropriately. After a sign-in, the API is called.
              */
             function updateSigninStatus(isSignedIn) {
-                if (isSignedIn) {
-                authorizeButton.style.display = 'none';
-                signoutButton.style.display = 'block';
-                } else {
-                authorizeButton.style.display = 'block';
-                signoutButton.style.display = 'none';
+                if (!isSignedIn) {
+                    // gapi.auth2.getAuthInstance().signIn();
                 }
             }
             
