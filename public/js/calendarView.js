@@ -181,6 +181,8 @@ function genCal(year, month) {
     let renderNum = 1;
     let tableBody = document.querySelector("#tableBody")
 
+    
+
     for (let i = 0; i < 6; i++) {
         let row = document.createElement('tr');
         for (let j = 0; j < 7; j++) {
@@ -204,8 +206,8 @@ function genCal(year, month) {
                     Object.values(curEvents).forEach((e) => {
                         td.innerHTML += `<div class="columns">
                                                 <div class="column is-11">
-                                                    <p class="subtitle is-clickable" onclick ="toggleModal('${e.id}')"> ${e.summary} 
-                                                    </p>
+                                                    <span class="tag is-clickable is-medium ${tagCol(e.colorId)}" onclick ="toggleModal('${e.id}')"> ${e.summary} 
+                                                    </span>
                                                     <div class="modal" id = '${e.id}'>
                                                         <div class="modal-background"></div>
                                                             <div class="modal-card">
@@ -308,3 +310,17 @@ function deleteEvent(evId){
 
 }
 
+function tagCol(evColorId){
+     let tagColour ='';
+    if (evColorId == 4) {
+            tagColour = 'is-danger'
+       
+            } else if (evColorId == 5) {
+                tagColour = 'is-warning'
+               
+            } else {
+                tagColour = 'is-success'
+                
+            }
+            return `${tagColour}`;
+}
