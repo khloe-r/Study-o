@@ -251,6 +251,8 @@ const saveEditedNote = () => {
     
     closeEditModal();
     displayAllDocs();
+    //location.reload();
+
 }
 
 const displayRecentlyEdited = (docId, timestamp, percentChange) => {

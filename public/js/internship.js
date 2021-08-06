@@ -16,19 +16,29 @@ window.onload = () => {
 }
 
 const submitFile = () => {
+    console.log('submitting')
     const fileNameInput = document.querySelector('#fileUploadInput')
     var file = fileInput.files[0]
     let userID = '';
+    console.log('about to auth')
     firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
             userID = user.uid;
             var storageRef = firebase.storage().ref(`${userID}/${fileNameInput.value}/${fileName.textContent}`)
-            storageRef.put(file)
+            console.log('putting')
+            // storageRef.put(file);
+            storageRef.put(file).then((snapshot) => {
+                console.log('Uploaded a blob or file!');
+                location.reload();
+            });
             fileNameInput.value = ''
+            console.log(storageRef)
+            console.log(file)
+            console.log(user.uid)
         }
-        location.reload()
+        
     }) 
-    
+    //window.setTimeout(location.reload() , 10);
 }
 
 const deleteFile = (parent, child) => {
