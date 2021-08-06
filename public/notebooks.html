@@ -1,200 +1,230 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>Study-o</title>
-        <link rel="stylesheet" href="css/style.css" type="text/css">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
-        <!-- update the version number as needed -->
-        <script defer src="/__/firebase/8.3.1/firebase-app.js"></script>
-        <!-- include only the Firebase features as you need -->
-        <script defer src="/__/firebase/8.3.1/firebase-auth.js"></script>
-        <script defer src="/__/firebase/8.3.1/firebase-database.js"></script>
-        <script defer src="/__/firebase/init.js?useEmulator=true"></script>    
-        <script src="js/logout.js"></script>
-    </head>
-    <body>
-        <nav class="navbar" role="navigation" aria-label="main navigation">
-            <div class="navbar-brand">
-                <a class="navbar-item" href="dashboard.html">
-                <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28">
-                </a>
-                <a role="button" href="dropdown.html" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Study-o</title>
+    <link rel="stylesheet" href="css/style.css" type="text/css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <!-- update the version number as needed -->
+    <script defer src="/__/firebase/8.3.1/firebase-app.js"></script>
+    <!-- include only the Firebase features as you need -->
+    <script defer src="/__/firebase/8.3.1/firebase-auth.js"></script>
+    <script defer src="/__/firebase/8.3.1/firebase-database.js"></script>
+    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+    <script defer src="js/notebook.js"></script>
+
+    <script src="js/logout.js"></script>
+</head>
+
+<body>
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <a href="dashboard.html">
+                <img src="css/study-o-logo.png" width="120" height="60" class="ml-3">
+            </a>
+            <a role="button" href="dropdown.html" class="navbar-burger" aria-label="menu" aria-expanded="false"
+                data-target="navbarBasicExample">
                 <span aria-hidden="true"></span>
                 <span aria-hidden="true"></span>
                 <span aria-hidden="true"></span>
-                </a>
-            </div>
-            <div id="navbarBasicExample" class="navbar-menu">
-                <div class="navbar-end">
-                    <a class="navbar-item" href="calView.html">
+            </a>
+        </div>
+        <div id="navbarBasicExample" class="navbar-menu">
+            <div class="navbar-end">
+                <a class="navbar-item" href="calView.html">
                     Homework Tracker
-                    </a>
-                    <a class="navbar-item" href="internship.html">
+                </a>
+                <a class="navbar-item" href="internship.html">
                     Internship Tracker
-                    </a>
-                    <a class="navbar-item" href="pomodoro.html">
+                </a>
+                <a class="navbar-item" href="pomodoro.html">
                     Pomodoro Timer
-                    </a>
-                    <a class="navbar-item" href="notebooks.html">
+                </a>
+                <a class="navbar-item" href="notebooks.html">
                     Notebooks
-                    </a>
-                </div>
-                <div class="navbar-end">
-                    <div class="navbar-item">
-                        <div class="buttons">
-                            <a class="button is-primary" onclick="logout()">
+                </a>
+            </div>
+            <div class="navbar-end">
+                <div class="navbar-item">
+                    <div class="buttons">
+                        <a class="button is-primary" onclick="logout()">
                             <strong>Log Out</strong>
-                            </a>
-                        </div>
+                        </a>
                     </div>
                 </div>
-            </div>
-        </nav>
-        <section class="hero is-small has-text-centered">
-            <div class="hero-body">
-                <p class="title">
-                    Notebook
-                </p>
-            </div>
-        </section>
-        <button id="authorize_button" style="display: none;">Authorize</button>
-        <button id="signout_button" style="display: none;">Sign Out</button>
-
-        <section class="hero is-small">
-            <div class="hero-body">
-                <div class="columns">
-                    <div class="column">
-                        <p class="title has-text-centered">
-                            Recently Edited
-                        </p>
-                        <div id="recent" class="columns is-multiline">
-                        </div>
-                    </div>
-                    <div class="column">
-                        <p class="title has-text-centered">
-                            Add a Note
-                        </p>
-                        <div class="box">
-                            <div class="field">
-                                <label class="label">Note Title</label>
-                                <div class="control">
-                                    <input class="input" type="text" id="noteTitle">
-                                </div>
-                            </div>
-                            <div class="field">
-                                <label class="label">Note Content</label>
-                                <div class="control">
-                                    <textarea class="textarea" id="noteText"></textarea>
-                                </div>
-                            </div>
-                            <div class="control">
-                                <button class="button is-link is-fullwidth has-text-weight-medium is-medium" onclick="addNote()">Create Note</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="container" class="columns is-multiline">
-        </section>
-
-        <div id="editNoteModal" class="modal">
-            <div class="modal-background"></div>
-            <div class="modal-card">
-                <section class="modal-card-body">
-                    <!-- <p class="is-subtitle">Note Title</p>
-                    <input class="input is-normal" id="editTitleInput" type="text"> -->
-                    <p class="is-subtitle">Note Content</p>
-                    <textarea class="textarea" id="editContentInput"></textarea>
-                </section>
-                <footer class="modal-card-foot">
-                    <button class="button is-success" onclick="saveEditedNote()">Save changes</button>
-                    <button class="button is-danger" onclick="closeEditModal()">Cancel</button>
-                </footer>
             </div>
         </div>
-        <footer class="footer">
+    </nav>
+    <section class="hero is-small has-text-centered">
+        <div class="hero-body">
+            <p class="title">
+                Notebook
+            </p>
+        </div>
+    </section>
+    <button id="authorize_button" style="display: none;">Authorize</button>
+    <button id="signout_button" style="display: none;">Sign Out</button>
+
+    <section class="hero is-small">
+        <div class="hero-body">
+            <div class="columns">
+                <div class="column">
+                    <p class="title has-text-centered">
+                        Recently Edited
+                    </p>
+                    <div id="recent" class="columns is-multiline">
+                    </div>
+                </div>
+                <div class="column">
+                    <p class="title has-text-centered">
+                        Add a Note
+                    </p>
+                    <div class="box">
+                        <div class="field">
+                            <label class="label">Note Title</label>
+                            <div class="control">
+                                <input class="input" type="text" id="noteTitle">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Note Content</label>
+                            <div class="control">
+                                <textarea class="textarea" id="noteText"></textarea>
+                            </div>
+                        </div>
+                        <div class="control">
+                            <button class="button is-link is-fullwidth has-text-weight-medium is-medium"
+                                onclick="addNote()">Create Note</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="container" class="columns is-multiline">
+    </section>
+
+    <div id="editNoteModal" class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <section class="modal-card-body">
+                <!-- <p class="is-subtitle">Note Title</p>
+                    <input class="input is-normal" id="editTitleInput" type="text"> -->
+                <p class="is-subtitle">Note Content</p>
+                <textarea class="textarea" id="editContentInput"></textarea>
+            </section>
+            <footer class="modal-card-foot">
+                <button class="button is-success" onclick="saveEditedNote()">Save changes</button>
+                <button class="button is-danger" onclick="closeEditModal()">Cancel</button>
+            </footer>
+        </div>
+    </div>
+    <footer class="footer">
         <div class="content has-text-centered">
             <p>
-            <strong>Study-O</strong> by Sia Bhatia, Aryan Chinnala and Khloe Ramdhan. © <a href="https://github.com/khloe-r/Study-o">Study-O</a> 2021
+                <strong>Study-O</strong> by Sia Bhatia, Aryan Chinnala and Khloe Ramdhan. © <a
+                    href="https://github.com/khloe-r/Study-o">Study-O</a> 2021
             </p>
         </div>
     </footer>
 
-        <script type="text/javascript">
-            // Client ID and API key from the Developer Console
-            var CLIENT_ID = '243003109957-8bpj74e6eib10r888ccleeh1t0lhqp8g.apps.googleusercontent.com';
-            var API_KEY = 'AIzaSyDEL7uevoZ_rQ3JLHWDTqHGKrWvTRG-tKY';
-            
-                // Array of API discovery doc URLs for APIs used by the quickstart
-            var DISCOVERY_DOCS = ['https://docs.googleapis.com/$discovery/rest?version=v1'];
-            
-            // Authorization scopes required by the API; multiple scopes can be
-            // included, separated by spaces.
-            var SCOPES = "https://www.googleapis.com/auth/documents";
-            
-            var authorizeButton = document.getElementById('authorize_button');
-            var signoutButton = document.getElementById('signout_button');
-            
-            /**
-             *  On load, called to load the auth2 library and API client library.
-             */
-            function handleClientLoad() {
-                gapi.load('client:auth2', initClient);
-            }
-            
-            /**
-             *  Initializes the API client library and sets up sign-in state
-             *  listeners.
-             */
-            function initClient() {
-                gapi.client.init({
-                apiKey: API_KEY,
-                clientId: CLIENT_ID,
-                discoveryDocs: DISCOVERY_DOCS,
-                scope: SCOPES
-                }).then(function() {
-                // Listen for sign-in state changes.
-                gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
-            
-                // Handle the initial sign-in state.
-                updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-                authorizeButton.onclick = handleAuthClick;
-                signoutButton.onclick = handleSignoutClick;
-                });
-            }
-            
-            /**
-             *  Called when the signed in status changes, to update the UI
-             *  appropriately. After a sign-in, the API is called.
-             */
-            function updateSigninStatus(isSignedIn) {
-                if (isSignedIn) {
-                authorizeButton.style.display = 'none';
-                signoutButton.style.display = 'block';
-                } else {
-                authorizeButton.style.display = 'block';
-                signoutButton.style.display = 'none';
-                }
-            }
-            
-            /**
-             *  Sign in the user upon button click.
-             */
-            function handleAuthClick(event) {
-                gapi.auth2.getAuthInstance().signIn();
-            }
-            
-            /**
-             *  Sign out the user upon button click.
-             */
-            function handleSignoutClick(event) {
-                gapi.auth2.getAuthInstance().signOut();
-            }        
-        </script>
-        <script defer src="js/notebook.js"></script>
-        <script async="" defer="" onload="this.onload=function(){};handleClientLoad()" onreadystatechange="if (this.readyState === 'complete') this.onload()" src="https://apis.google.com/js/api.js"></script>
-    </body>
+    <script type="text/javascript">
+        // Client ID and API key from the Developer Console
+        var CLIENT_ID = '243003109957-8bpj74e6eib10r888ccleeh1t0lhqp8g.apps.googleusercontent.com';
+        var API_KEY = 'AIzaSyDEL7uevoZ_rQ3JLHWDTqHGKrWvTRG-tKY';
+
+        // Array of API discovery doc URLs for APIs used by the quickstart
+        var DISCOVERY_DOCS = ['https://docs.googleapis.com/$discovery/rest?version=v1'];
+
+        // Authorization scopes required by the API; multiple scopes can be
+        // included, separated by spaces.
+        var SCOPES = "https://www.googleapis.com/auth/documents";
+
+        var authorizeButton = document.getElementById('authorize_button');
+        var signoutButton = document.getElementById('signout_button');
+
+        /**
+         *  On load, called to load the auth2 library and API client library.
+         */
+        function handleClientLoad() {
+            gapi.client.setApiKey(API_KEY);
+            window.setTimeout(checkAuth, 1);
+
+            //gapi.load('client:auth2', initClient);
+        }
+        function checkAuth() {
+            gapi.auth.authorize({ client_id: CLIENT_ID, scope: SCOPES, immediate: true }, handleAuthResult);
+        }
+        function handleAuthResult(authResult) {
+            // var authorizeButton = document.getElementById('authorize-button');
+            // var resultPanel = document.getElementById('result-panel');
+            // var resultTitle = document.getElementById('result-title');
+            console.log(authResult);
+
+            if (authResult.error) {
+                location.replace("https://study-o.web.app/gCal.html");
+
+                //makeApiCall();	
+            } //else {													// otherwise, show button
+            // authorizeButton.style.visibility = 'visible';
+            // resultPanel.className += ' panel-danger';				// make panel red
+            // authorizeButton.onclick = handleAuthClick;				// setup function to handle button click
+            //}
+            initialSetup();
+        }
+
+        /**
+         *  Initializes the API client library and sets up sign-in state
+         *  listeners.
+         */
+        // function initClient() {
+        //     gapi.client.init({
+        //         apiKey: API_KEY,
+        //         clientId: CLIENT_ID,
+        //         discoveryDocs: DISCOVERY_DOCS,
+        //         scope: SCOPES
+        //     }).then(function () {
+        //         // Listen for sign-in state changes.
+        //         gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
+
+        //         // Handle the initial sign-in state.
+        //         updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+        //         authorizeButton.onclick = handleAuthClick;
+        //         signoutButton.onclick = handleSignoutClick;
+        //     });
+        // }
+
+        /**
+         *  Called when the signed in status changes, to update the UI
+         *  appropriately. After a sign-in, the API is called.
+         */
+        // function updateSigninStatus(isSignedIn) {
+        //     if (isSignedIn) {
+        //         authorizeButton.style.display = 'none';
+        //         signoutButton.style.display = 'block';
+        //     } else {
+        //         authorizeButton.style.display = 'block';
+        //         signoutButton.style.display = 'none';
+        //     }
+        // }
+
+        // /**
+        //  *  Sign in the user upon button click.
+        //  */
+        // function handleAuthClick(event) {
+        //     gapi.auth2.getAuthInstance().signIn();
+        // }
+
+        // /**
+        //  *  Sign out the user upon button click.
+        //  */
+        // function handleSignoutClick(event) {
+        //     gapi.auth2.getAuthInstance().signOut();
+        // }        
+    </script>
+    <script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>
+</body>
+
 </html>
